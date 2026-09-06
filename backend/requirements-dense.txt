@@ -1,0 +1,11 @@
+# Optional extra: dense multilingual retrieval re-ranking.
+#
+# The MVP works fully without this (pure TF-IDF, see app/vectorstore.py's docstring). Install
+# this ONLY if you want the retrieval quality/multilingual upgrade -- it pulls in PyTorch and
+# a ~470MB model download on first build, which is why it's kept out of requirements.txt.
+#
+#   pip install -r requirements.txt -r requirements-dense.txt
+#   python scripts/build_dense_index.py
+#
+# From then on, the backend picks it up automatically -- no code or config changes needed.
+sentence-transformers==3.0.1

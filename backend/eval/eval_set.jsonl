@@ -1,0 +1,21 @@
+{"query": "Can I patent a classical Ayurvedic churna exactly as described in Charaka Samhita?", "jurisdiction": "india", "expect_abstain": false, "expected_citation_ids": ["in-patents-3p"]}
+{"query": "What does TKDL do and who can access it?", "jurisdiction": "india", "expect_abstain": false, "expected_citation_ids": ["in-tkdl"]}
+{"query": "Do I need NBA approval before commercialising a formulation using an Indian medicinal plant?", "jurisdiction": "india", "expect_abstain": false, "expected_citation_ids": ["in-biodiversity-act-2002-2023-amendment"]}
+{"query": "What changed in the Patents Amendment Rules 2024 for request for examination timelines?", "jurisdiction": "india", "expect_abstain": false, "expected_citation_ids": ["in-patents-amendment-rules-2024"]}
+{"query": "How do I register a geographical indication for a regional Ayurvedic product?", "jurisdiction": "india", "expect_abstain": false, "expected_citation_ids": ["in-gi-act-1999"]}
+{"query": "Can Ayurveda Aahara food products make disease cure claims?", "jurisdiction": "india", "expect_abstain": false, "expected_citation_ids": ["in-fssai-ayurveda-aahara-2022"]}
+{"query": "What is required to license a phytopharmaceutical drug in India?", "jurisdiction": "india", "expect_abstain": false, "expected_citation_ids": ["in-ndct-rules-phytopharmaceutical"]}
+{"query": "Does the Drugs and Magic Remedies Act restrict advertising claims?", "jurisdiction": "india", "expect_abstain": false, "expected_citation_ids": ["in-magic-remedies-act-1954"]}
+{"query": "What does the WIPO treaty on genetic resources require patent applicants to disclose?", "jurisdiction": "international", "expect_abstain": false, "expected_citation_ids": ["intl-wipo-gratk-treaty-2024"]}
+{"query": "What is the Nagoya Protocol's requirement for accessing genetic resources?", "jurisdiction": "international", "expect_abstain": false, "expected_citation_ids": ["intl-nagoya-protocol-2010"]}
+{"query": "How do I file one international patent application covering multiple countries?", "jurisdiction": "international", "expect_abstain": false, "expected_citation_ids": ["intl-pct"]}
+{"query": "How can I register my Ayurvedic brand name in many countries at once?", "jurisdiction": "international", "expect_abstain": false, "expected_citation_ids": ["intl-madrid-system"]}
+{"query": "What is the simplified EU route for traditional herbal medicinal products?", "jurisdiction": "international", "expect_abstain": false, "expected_citation_ids": ["intl-eu-thmpd"]}
+{"query": "What's the difference between a dietary supplement and a botanical drug in the US?", "jurisdiction": "international", "expect_abstain": false, "expected_citation_ids": ["intl-us-dshea"]}
+{"query": "How do I deposit a microbial culture for a patent application internationally?", "jurisdiction": "international", "expect_abstain": false, "expected_citation_ids": ["intl-budapest-treaty"]}
+{"query": "What is the best recipe for a birthday cake?", "jurisdiction": "india", "expect_abstain": true, "expected_citation_ids": []}
+{"query": "Should I invest my savings in cryptocurrency this year?", "jurisdiction": "international", "expect_abstain": true, "expected_citation_ids": []}
+{"query": "What is the weather forecast for Mumbai tomorrow?", "jurisdiction": "india", "expect_abstain": true, "expected_citation_ids": []}
+{"query": "I want to patent a new Ayurvedic formulation and also register its brand name, in both India and abroad", "jurisdiction": "both", "mode": "agentic", "min_steps": 3, "max_steps": 3, "expect_all_of": ["in-trademarks-act-1999", "intl-madrid-system"]}
+{"query": "What is the best recipe for a birthday cake and what is the weather in Mumbai?", "jurisdiction": "both", "mode": "agentic", "expect_abstain": true}
+{"query": "What changed in the Patents Amendment Rules 2024 for request for examination timelines?", "jurisdiction": "india", "mode": "agentic", "min_steps": 1, "max_steps": 1, "expected_citation_ids": ["in-patents-amendment-rules-2024"]}

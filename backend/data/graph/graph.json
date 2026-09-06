@@ -1,0 +1,1536 @@
+{
+  "directed": true,
+  "multigraph": true,
+  "graph": {},
+  "nodes": [
+    {
+      "node_type": "document",
+      "label": "Traditional-knowledge bar on patentability",
+      "jurisdiction": "India",
+      "regime": "patent",
+      "source_url": "https://www.indiacode.nic.in/handle/123456789/1388",
+      "id": "in-patents-3p"
+    },
+    {
+      "node_type": "document",
+      "label": "Mandatory disclosure of source and geographical origin of biological material",
+      "jurisdiction": "India",
+      "regime": "patent",
+      "source_url": "https://www.indiacode.nic.in/handle/123456789/1388",
+      "id": "in-patents-form1-source-disclosure"
+    },
+    {
+      "node_type": "document",
+      "label": "Patents (Amendment) Rules, 2024 – procedural changes relevant to Ayurveda applicants",
+      "jurisdiction": "India",
+      "regime": "patent",
+      "source_url": "https://www.ipindia.gov.in/writereaddata/Portal/News/895_1_Patent_Amendment_Rules_2024.pdf",
+      "id": "in-patents-amendment-rules-2024"
+    },
+    {
+      "node_type": "document",
+      "label": "Biological Diversity Act, 2002 (as amended in 2023) – Access and Benefit Sharing duties",
+      "jurisdiction": "India",
+      "regime": "biodiversity_abs",
+      "source_url": "https://egazette.gov.in/WriteReadData/2023/247815.pdf",
+      "id": "in-biodiversity-act-2002-2023-amendment"
+    },
+    {
+      "node_type": "document",
+      "label": "Biological Diversity Rules, 2024 – simplified ABS approval procedure",
+      "jurisdiction": "India",
+      "regime": "biodiversity_abs",
+      "source_url": "https://moef.gov.in/",
+      "id": "in-biodiversity-rules-2024"
+    },
+    {
+      "node_type": "document",
+      "label": "Traditional Knowledge Digital Library (TKDL) – defensive prior-art protection",
+      "jurisdiction": "India",
+      "regime": "patent",
+      "source_url": "http://www.tkdl.res.in/",
+      "id": "in-tkdl"
+    },
+    {
+      "node_type": "document",
+      "label": "Geographical Indications of Goods (Registration and Protection) Act, 1999",
+      "jurisdiction": "India",
+      "regime": "gi",
+      "source_url": "https://www.indiacode.nic.in/handle/123456789/1889",
+      "id": "in-gi-act-1999"
+    },
+    {
+      "node_type": "document",
+      "label": "Trade Marks Act, 1999 – branding proprietary Ayurvedic products",
+      "jurisdiction": "India",
+      "regime": "trademark",
+      "source_url": "https://www.indiacode.nic.in/handle/123456789/1993",
+      "id": "in-trademarks-act-1999"
+    },
+    {
+      "node_type": "document",
+      "label": "Designs Act, 2000 – protecting product and packaging appearance",
+      "jurisdiction": "India",
+      "regime": "design",
+      "source_url": "https://www.indiacode.nic.in/handle/123456789/2004",
+      "id": "in-designs-act-2000"
+    },
+    {
+      "node_type": "document",
+      "label": "Copyright Act, 1957 – what copyright does and does not protect for Ayurveda",
+      "jurisdiction": "India",
+      "regime": "copyright",
+      "source_url": "https://www.indiacode.nic.in/handle/123456789/1367",
+      "id": "in-copyright-act-1957"
+    },
+    {
+      "node_type": "document",
+      "label": "Protection of Plant Varieties and Farmers' Rights Act, 2001",
+      "jurisdiction": "India",
+      "regime": "plant_variety",
+      "source_url": "https://www.indiacode.nic.in/handle/123456789/2016",
+      "id": "in-ppvfr-act-2001"
+    },
+    {
+      "node_type": "document",
+      "label": "Classical (First-Schedule) and patent-or-proprietary Ayurvedic medicines",
+      "jurisdiction": "India",
+      "regime": "drug_regulatory",
+      "source_url": "https://cdsco.gov.in/opencms/export/sites/CDSCO_WEB/Pdf-documents/acts_rules/2016DrugsandCosmeticsAct1940Rules1945.pdf",
+      "id": "in-dc-act-classical-drugs"
+    },
+    {
+      "node_type": "document",
+      "label": "Phytopharmaceutical drugs and new ASU drugs – evidence-based category",
+      "jurisdiction": "India",
+      "regime": "drug_regulatory",
+      "source_url": "https://cdsco.gov.in/opencms/export/sites/CDSCO_WEB/Pdf-documents/NewDrugsandClinicalTrialsRules2019.pdf",
+      "id": "in-ndct-rules-phytopharmaceutical"
+    },
+    {
+      "node_type": "document",
+      "label": "Drugs and Magic Remedies (Objectionable Advertisements) Act, 1954",
+      "jurisdiction": "India",
+      "regime": "advertising",
+      "source_url": "https://www.indiacode.nic.in/handle/123456789/1608",
+      "id": "in-magic-remedies-act-1954"
+    },
+    {
+      "node_type": "document",
+      "label": "FSSAI Ayurveda Aahara Regulations, 2022",
+      "jurisdiction": "India",
+      "regime": "food_cosmetic",
+      "source_url": "https://www.fssai.gov.in/",
+      "id": "in-fssai-ayurveda-aahara-2022"
+    },
+    {
+      "node_type": "document",
+      "label": "Digital Personal Data Protection Act, 2023 – relevant to this assistant itself",
+      "jurisdiction": "India",
+      "regime": "data_protection",
+      "source_url": "https://www.indiacode.nic.in/handle/123456789/20182",
+      "id": "in-dpdp-act-2023"
+    },
+    {
+      "node_type": "document",
+      "label": "Exclusion of plants, animals and essentially biological processes",
+      "jurisdiction": "India",
+      "regime": "patent",
+      "source_url": "https://www.indiacode.nic.in/handle/123456789/1388",
+      "id": "in-patents-3j"
+    },
+    {
+      "node_type": "document",
+      "label": "Challenging a wrongly granted Ayurveda-related patent",
+      "jurisdiction": "India",
+      "regime": "patent",
+      "source_url": "https://www.indiacode.nic.in/handle/123456789/1388",
+      "id": "in-patents-opposition-revocation"
+    },
+    {
+      "node_type": "document",
+      "label": "Trademark infringement and passing off for Ayurvedic brands",
+      "jurisdiction": "India",
+      "regime": "trademark",
+      "source_url": "https://www.indiacode.nic.in/handle/123456789/1993",
+      "id": "in-trademarks-infringement-passing-off"
+    },
+    {
+      "node_type": "document",
+      "label": "GI infringement and the authorised-user mechanism",
+      "jurisdiction": "India",
+      "regime": "gi",
+      "source_url": "https://www.indiacode.nic.in/handle/123456789/1889",
+      "id": "in-gi-infringement-authorised-users"
+    },
+    {
+      "node_type": "document",
+      "label": "Copyright infringement remedies",
+      "jurisdiction": "India",
+      "regime": "copyright",
+      "source_url": "https://www.indiacode.nic.in/handle/123456789/1367",
+      "id": "in-copyright-infringement"
+    },
+    {
+      "node_type": "document",
+      "label": "Piracy of a registered design",
+      "jurisdiction": "India",
+      "regime": "design",
+      "source_url": "https://www.indiacode.nic.in/handle/123456789/2004",
+      "id": "in-designs-piracy"
+    },
+    {
+      "node_type": "document",
+      "label": "National Biodiversity Authority: functions and the approval process",
+      "jurisdiction": "India",
+      "regime": "biodiversity_abs",
+      "source_url": "http://nbaindia.org/",
+      "id": "in-biodiversity-nba-functions"
+    },
+    {
+      "node_type": "document",
+      "label": "National IPR Policy, 2016 — the overarching policy umbrella",
+      "jurisdiction": "India",
+      "regime": "patent",
+      "source_url": "https://dpiit.gov.in/policies-rules-and-acts/policies/national-ipr-policy",
+      "id": "in-national-ipr-policy-2016"
+    },
+    {
+      "node_type": "document",
+      "label": "Consumer Protection Act, 2019 — misleading-advertisement powers",
+      "jurisdiction": "India",
+      "regime": "advertising",
+      "source_url": "https://www.indiacode.nic.in/handle/123456789/15256",
+      "id": "in-consumer-protection-act-2019-misleading-ads"
+    },
+    {
+      "node_type": "document",
+      "label": "Legal Metrology (Packaged Commodities) Rules, 2011 — mandatory package declarations",
+      "jurisdiction": "India",
+      "regime": "food_cosmetic",
+      "source_url": "https://www.indiacode.nic.in/handle/123456789/2093",
+      "id": "in-legal-metrology-packaged-commodities-rules-2011"
+    },
+    {
+      "node_type": "document",
+      "label": "TRIPS Agreement – patentable subject matter baseline",
+      "jurisdiction": "International",
+      "regime": "treaty",
+      "source_url": "https://www.wto.org/english/docs_e/legal_e/27-trips.pdf",
+      "id": "intl-trips-art27"
+    },
+    {
+      "node_type": "document",
+      "label": "Convention on Biological Diversity – sovereignty over genetic resources",
+      "jurisdiction": "International",
+      "regime": "treaty",
+      "source_url": "https://www.cbd.int/convention/text/",
+      "id": "intl-cbd-1992"
+    },
+    {
+      "node_type": "document",
+      "label": "Nagoya Protocol on Access and Benefit-Sharing",
+      "jurisdiction": "International",
+      "regime": "treaty",
+      "source_url": "https://www.cbd.int/abs/",
+      "id": "intl-nagoya-protocol-2010"
+    },
+    {
+      "node_type": "document",
+      "label": "WIPO Treaty on Intellectual Property, Genetic Resources and Associated Traditional Knowledge (2024)",
+      "jurisdiction": "International",
+      "regime": "treaty",
+      "source_url": "https://www.wipo.int/en/web/treaties/ip/gratk/summary_gratk",
+      "id": "intl-wipo-gratk-treaty-2024"
+    },
+    {
+      "node_type": "document",
+      "label": "Patent Cooperation Treaty (PCT) – international patent filing route",
+      "jurisdiction": "International",
+      "regime": "treaty",
+      "source_url": "https://www.wipo.int/pct/en/",
+      "id": "intl-pct"
+    },
+    {
+      "node_type": "document",
+      "label": "Madrid System – international trademark registration",
+      "jurisdiction": "International",
+      "regime": "trademark",
+      "source_url": "https://www.wipo.int/madrid/en/",
+      "id": "intl-madrid-system"
+    },
+    {
+      "node_type": "document",
+      "label": "Hague System – international industrial design registration",
+      "jurisdiction": "International",
+      "regime": "design",
+      "source_url": "https://www.wipo.int/hague/en/",
+      "id": "intl-hague-system"
+    },
+    {
+      "node_type": "document",
+      "label": "Budapest Treaty – deposit of micro-organisms for patent procedure",
+      "jurisdiction": "International",
+      "regime": "patent",
+      "source_url": "https://www.wipo.int/budapest/en/",
+      "id": "intl-budapest-treaty"
+    },
+    {
+      "node_type": "document",
+      "label": "WHO Traditional Medicine Strategy & herbal-medicine monographs",
+      "jurisdiction": "International",
+      "regime": "market_access",
+      "source_url": "https://www.who.int/health-topics/traditional-complementary-and-integrative-medicine",
+      "id": "intl-who-traditional-medicine"
+    },
+    {
+      "node_type": "document",
+      "label": "United States – dietary supplement vs. botanical drug pathway",
+      "jurisdiction": "International",
+      "regime": "market_access",
+      "source_url": "https://www.fda.gov/regulatory-information/search-fda-guidance-documents/botanical-drug-development-guidance-industry",
+      "id": "intl-us-dshea"
+    },
+    {
+      "node_type": "document",
+      "label": "European Union – Traditional Herbal Medicinal Products Directive",
+      "jurisdiction": "International",
+      "regime": "market_access",
+      "source_url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32004L0024",
+      "id": "intl-eu-thmpd"
+    },
+    {
+      "node_type": "document",
+      "label": "WIPO Intergovernmental Committee (IGC) on IP, Genetic Resources, TK and Folklore",
+      "jurisdiction": "International",
+      "regime": "treaty",
+      "source_url": "https://www.wipo.int/tk/en/igc/",
+      "id": "intl-wipo-igc"
+    },
+    {
+      "node_type": "document",
+      "label": "Paris Convention — the priority-right foundation under nearly every filing",
+      "jurisdiction": "International",
+      "regime": "treaty",
+      "source_url": "https://www.wipo.int/wipolex/en/text/288514",
+      "id": "intl-paris-convention"
+    },
+    {
+      "node_type": "document",
+      "label": "TRIPS — protection of undisclosed information (trade secrets)",
+      "jurisdiction": "International",
+      "regime": "treaty",
+      "source_url": "https://www.wto.org/english/docs_e/legal_e/27-trips.pdf",
+      "id": "intl-trips-art39-trade-secrets"
+    },
+    {
+      "node_type": "document",
+      "label": "UPOV Convention — international plant-variety protection (and why India stays outside it)",
+      "jurisdiction": "International",
+      "regime": "plant_variety",
+      "source_url": "https://www.upov.int/",
+      "id": "intl-upov-convention"
+    },
+    {
+      "node_type": "document",
+      "label": "Berne Convention — international copyright baseline",
+      "jurisdiction": "International",
+      "regime": "copyright",
+      "source_url": "https://www.wipo.int/treaties/en/ip/berne/",
+      "id": "intl-berne-convention"
+    },
+    {
+      "node_type": "document",
+      "label": "Lisbon System / Geneva Act (2015) — international GI registration (India not currently a member)",
+      "jurisdiction": "International",
+      "regime": "gi",
+      "source_url": "https://www.wipo.int/en/web/lisbon-system",
+      "id": "intl-lisbon-geneva-act-gi"
+    },
+    {
+      "node_type": "document",
+      "label": "Australia — TGA 'Listed' (AUST L) complementary medicines pathway",
+      "jurisdiction": "International",
+      "regime": "market_access",
+      "source_url": "https://www.tga.gov.au/products/medicines/listed-medicines/overview/listed-complementary-medicines",
+      "id": "intl-australia-tga-listed-medicines"
+    },
+    {
+      "node_type": "document",
+      "label": "Canada — Natural Health Products Regulations",
+      "jurisdiction": "International",
+      "regime": "market_access",
+      "source_url": "https://www.canada.ca/en/health-canada/services/drugs-health-products/natural-non-prescription/applications-submissions/product-licensing.html",
+      "id": "intl-health-canada-nhp"
+    },
+    {
+      "node_type": "regime",
+      "label": "Patent law",
+      "id": "regime:patent"
+    },
+    {
+      "node_type": "jurisdiction",
+      "label": "India",
+      "id": "jurisdiction:India"
+    },
+    {
+      "node_type": "regime",
+      "label": "Biodiversity / ABS",
+      "id": "regime:biodiversity_abs"
+    },
+    {
+      "node_type": "regime",
+      "label": "Geographical indications",
+      "id": "regime:gi"
+    },
+    {
+      "node_type": "regime",
+      "label": "Trademarks",
+      "id": "regime:trademark"
+    },
+    {
+      "node_type": "regime",
+      "label": "Industrial designs",
+      "id": "regime:design"
+    },
+    {
+      "node_type": "regime",
+      "label": "Copyright",
+      "id": "regime:copyright"
+    },
+    {
+      "node_type": "regime",
+      "label": "Plant variety rights",
+      "id": "regime:plant_variety"
+    },
+    {
+      "node_type": "regime",
+      "label": "Drug regulatory",
+      "id": "regime:drug_regulatory"
+    },
+    {
+      "node_type": "regime",
+      "label": "Advertising law",
+      "id": "regime:advertising"
+    },
+    {
+      "node_type": "regime",
+      "label": "Food & cosmetic regulatory",
+      "id": "regime:food_cosmetic"
+    },
+    {
+      "node_type": "regime",
+      "label": "Data protection",
+      "id": "regime:data_protection"
+    },
+    {
+      "node_type": "regime",
+      "label": "International treaty framework",
+      "id": "regime:treaty"
+    },
+    {
+      "node_type": "jurisdiction",
+      "label": "International",
+      "id": "jurisdiction:International"
+    },
+    {
+      "node_type": "regime",
+      "label": "Herbal market access",
+      "id": "regime:market_access"
+    },
+    {
+      "node_type": "category",
+      "label": "Classical / generic medicine",
+      "id": "category:r_classical"
+    },
+    {
+      "node_type": "category",
+      "label": "Proprietary medicine (standard)",
+      "id": "category:r_proprietary_standard"
+    },
+    {
+      "node_type": "category",
+      "label": "Proprietary medicine (Schedule E(1))",
+      "id": "category:r_proprietary_e1"
+    },
+    {
+      "node_type": "category",
+      "label": "Phytopharmaceutical drug",
+      "id": "category:r_phytopharmaceutical"
+    },
+    {
+      "node_type": "category",
+      "label": "Ayurveda-Aahar / nutraceutical",
+      "id": "category:r_ayurveda_aahar"
+    },
+    {
+      "node_type": "category",
+      "label": "Cosmetic",
+      "id": "category:r_cosmetic"
+    },
+    {
+      "node_type": "category",
+      "label": "New / non-classical drug",
+      "id": "category:r_new_drug"
+    },
+    {
+      "node_type": "institution",
+      "label": "National Biodiversity Authority",
+      "id": "institution:NBA"
+    },
+    {
+      "node_type": "institution",
+      "label": "CDSCO (Ayush drug regulator)",
+      "id": "institution:CDSCO"
+    },
+    {
+      "node_type": "institution",
+      "label": "FSSAI",
+      "id": "institution:FSSAI"
+    },
+    {
+      "node_type": "institution",
+      "label": "WIPO",
+      "id": "institution:WIPO"
+    },
+    {
+      "node_type": "institution",
+      "label": "Central Consumer Protection Authority",
+      "id": "institution:CCPA"
+    }
+  ],
+  "links": [
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "in-patents-3p",
+      "target": "regime:patent",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "in-patents-3p",
+      "target": "jurisdiction:India",
+      "key": 0
+    },
+    {
+      "relation": "RELEVANT_TO_CATEGORY",
+      "source": "in-patents-3p",
+      "target": "category:r_classical",
+      "key": 0
+    },
+    {
+      "relation": "RELEVANT_TO_CATEGORY",
+      "source": "in-patents-3p",
+      "target": "category:r_proprietary_standard",
+      "key": 0
+    },
+    {
+      "relation": "RELEVANT_TO_CATEGORY",
+      "source": "in-patents-3p",
+      "target": "category:r_proprietary_e1",
+      "key": 0
+    },
+    {
+      "relation": "INTERNATIONAL_ROUTE",
+      "source": "in-patents-3p",
+      "target": "intl-pct",
+      "key": 0
+    },
+    {
+      "relation": "GOVERNED_BY_BASELINE",
+      "source": "in-patents-3p",
+      "target": "intl-trips-art27",
+      "key": 0
+    },
+    {
+      "relation": "PRIORITY_GOVERNED_BY",
+      "source": "in-patents-3p",
+      "target": "intl-paris-convention",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "in-patents-form1-source-disclosure",
+      "target": "regime:patent",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "in-patents-form1-source-disclosure",
+      "target": "jurisdiction:India",
+      "key": 0
+    },
+    {
+      "relation": "RELEVANT_TO_CATEGORY",
+      "source": "in-patents-form1-source-disclosure",
+      "target": "category:r_proprietary_standard",
+      "key": 0
+    },
+    {
+      "relation": "RELEVANT_TO_CATEGORY",
+      "source": "in-patents-form1-source-disclosure",
+      "target": "category:r_phytopharmaceutical",
+      "key": 0
+    },
+    {
+      "relation": "RELEVANT_TO_CATEGORY",
+      "source": "in-patents-form1-source-disclosure",
+      "target": "category:r_new_drug",
+      "key": 0
+    },
+    {
+      "relation": "ADMINISTERED_BY",
+      "source": "in-patents-form1-source-disclosure",
+      "target": "institution:NBA",
+      "key": 0
+    },
+    {
+      "relation": "APPLIES_ALONGSIDE",
+      "source": "in-patents-form1-source-disclosure",
+      "target": "in-biodiversity-act-2002-2023-amendment",
+      "key": 0
+    },
+    {
+      "relation": "REINFORCED_BY",
+      "source": "in-patents-form1-source-disclosure",
+      "target": "intl-wipo-gratk-treaty-2024",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "in-patents-amendment-rules-2024",
+      "target": "regime:patent",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "in-patents-amendment-rules-2024",
+      "target": "jurisdiction:India",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "in-biodiversity-act-2002-2023-amendment",
+      "target": "regime:biodiversity_abs",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "in-biodiversity-act-2002-2023-amendment",
+      "target": "jurisdiction:India",
+      "key": 0
+    },
+    {
+      "relation": "RELEVANT_TO_CATEGORY",
+      "source": "in-biodiversity-act-2002-2023-amendment",
+      "target": "category:r_classical",
+      "key": 0
+    },
+    {
+      "relation": "RELEVANT_TO_CATEGORY",
+      "source": "in-biodiversity-act-2002-2023-amendment",
+      "target": "category:r_phytopharmaceutical",
+      "key": 0
+    },
+    {
+      "relation": "RELEVANT_TO_CATEGORY",
+      "source": "in-biodiversity-act-2002-2023-amendment",
+      "target": "category:r_new_drug",
+      "key": 0
+    },
+    {
+      "relation": "ADMINISTERED_BY",
+      "source": "in-biodiversity-act-2002-2023-amendment",
+      "target": "institution:NBA",
+      "key": 0
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "source": "in-biodiversity-act-2002-2023-amendment",
+      "target": "intl-cbd-1992",
+      "key": 0
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "source": "in-biodiversity-act-2002-2023-amendment",
+      "target": "intl-nagoya-protocol-2010",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "in-biodiversity-rules-2024",
+      "target": "regime:biodiversity_abs",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "in-biodiversity-rules-2024",
+      "target": "jurisdiction:India",
+      "key": 0
+    },
+    {
+      "relation": "ADMINISTERED_BY",
+      "source": "in-biodiversity-rules-2024",
+      "target": "institution:NBA",
+      "key": 0
+    },
+    {
+      "relation": "DETAILS",
+      "source": "in-biodiversity-rules-2024",
+      "target": "in-biodiversity-act-2002-2023-amendment",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "in-tkdl",
+      "target": "regime:patent",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "in-tkdl",
+      "target": "jurisdiction:India",
+      "key": 0
+    },
+    {
+      "relation": "RELEVANT_TO_CATEGORY",
+      "source": "in-tkdl",
+      "target": "category:r_classical",
+      "key": 0
+    },
+    {
+      "relation": "SUPPORTS",
+      "source": "in-tkdl",
+      "target": "in-patents-3p",
+      "key": 0
+    },
+    {
+      "relation": "ALTERNATIVE_STRATEGY",
+      "source": "in-tkdl",
+      "target": "intl-trips-art39-trade-secrets",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "in-gi-act-1999",
+      "target": "regime:gi",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "in-gi-act-1999",
+      "target": "jurisdiction:India",
+      "key": 0
+    },
+    {
+      "relation": "RELEVANT_TO_CATEGORY",
+      "source": "in-gi-act-1999",
+      "target": "category:r_classical",
+      "key": 0
+    },
+    {
+      "relation": "ENFORCED_BY",
+      "source": "in-gi-act-1999",
+      "target": "in-gi-infringement-authorised-users",
+      "key": 0
+    },
+    {
+      "relation": "INTERNATIONAL_COUNTERPART",
+      "source": "in-gi-act-1999",
+      "target": "intl-lisbon-geneva-act-gi",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "in-trademarks-act-1999",
+      "target": "regime:trademark",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "in-trademarks-act-1999",
+      "target": "jurisdiction:India",
+      "key": 0
+    },
+    {
+      "relation": "RELEVANT_TO_CATEGORY",
+      "source": "in-trademarks-act-1999",
+      "target": "category:r_proprietary_standard",
+      "key": 0
+    },
+    {
+      "relation": "RELEVANT_TO_CATEGORY",
+      "source": "in-trademarks-act-1999",
+      "target": "category:r_proprietary_e1",
+      "key": 0
+    },
+    {
+      "relation": "RELEVANT_TO_CATEGORY",
+      "source": "in-trademarks-act-1999",
+      "target": "category:r_ayurveda_aahar",
+      "key": 0
+    },
+    {
+      "relation": "RELEVANT_TO_CATEGORY",
+      "source": "in-trademarks-act-1999",
+      "target": "category:r_cosmetic",
+      "key": 0
+    },
+    {
+      "relation": "ENFORCED_BY",
+      "source": "in-trademarks-act-1999",
+      "target": "in-trademarks-infringement-passing-off",
+      "key": 0
+    },
+    {
+      "relation": "INTERNATIONAL_ROUTE",
+      "source": "in-trademarks-act-1999",
+      "target": "intl-madrid-system",
+      "key": 0
+    },
+    {
+      "relation": "PRIORITY_GOVERNED_BY",
+      "source": "in-trademarks-act-1999",
+      "target": "intl-paris-convention",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "in-designs-act-2000",
+      "target": "regime:design",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "in-designs-act-2000",
+      "target": "jurisdiction:India",
+      "key": 0
+    },
+    {
+      "relation": "RELEVANT_TO_CATEGORY",
+      "source": "in-designs-act-2000",
+      "target": "category:r_cosmetic",
+      "key": 0
+    },
+    {
+      "relation": "ENFORCED_BY",
+      "source": "in-designs-act-2000",
+      "target": "in-designs-piracy",
+      "key": 0
+    },
+    {
+      "relation": "INTERNATIONAL_ROUTE",
+      "source": "in-designs-act-2000",
+      "target": "intl-hague-system",
+      "key": 0
+    },
+    {
+      "relation": "PRIORITY_GOVERNED_BY",
+      "source": "in-designs-act-2000",
+      "target": "intl-paris-convention",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "in-copyright-act-1957",
+      "target": "regime:copyright",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "in-copyright-act-1957",
+      "target": "jurisdiction:India",
+      "key": 0
+    },
+    {
+      "relation": "ENFORCED_BY",
+      "source": "in-copyright-act-1957",
+      "target": "in-copyright-infringement",
+      "key": 0
+    },
+    {
+      "relation": "GOVERNED_BY_BASELINE",
+      "source": "in-copyright-act-1957",
+      "target": "intl-berne-convention",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "in-ppvfr-act-2001",
+      "target": "regime:plant_variety",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "in-ppvfr-act-2001",
+      "target": "jurisdiction:India",
+      "key": 0
+    },
+    {
+      "relation": "ALTERNATIVE_TO",
+      "source": "in-ppvfr-act-2001",
+      "target": "intl-upov-convention",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "in-dc-act-classical-drugs",
+      "target": "regime:drug_regulatory",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "in-dc-act-classical-drugs",
+      "target": "jurisdiction:India",
+      "key": 0
+    },
+    {
+      "relation": "RELEVANT_TO_CATEGORY",
+      "source": "in-dc-act-classical-drugs",
+      "target": "category:r_classical",
+      "key": 0
+    },
+    {
+      "relation": "RELEVANT_TO_CATEGORY",
+      "source": "in-dc-act-classical-drugs",
+      "target": "category:r_proprietary_standard",
+      "key": 0
+    },
+    {
+      "relation": "RELEVANT_TO_CATEGORY",
+      "source": "in-dc-act-classical-drugs",
+      "target": "category:r_proprietary_e1",
+      "key": 0
+    },
+    {
+      "relation": "ADMINISTERED_BY",
+      "source": "in-dc-act-classical-drugs",
+      "target": "institution:CDSCO",
+      "key": 0
+    },
+    {
+      "relation": "RELATED_TO",
+      "source": "in-dc-act-classical-drugs",
+      "target": "in-ndct-rules-phytopharmaceutical",
+      "key": 0
+    },
+    {
+      "relation": "COMPLEMENTS",
+      "source": "in-dc-act-classical-drugs",
+      "target": "in-fssai-ayurveda-aahara-2022",
+      "key": 0
+    },
+    {
+      "relation": "LABELLING_GOVERNED_BY",
+      "source": "in-dc-act-classical-drugs",
+      "target": "in-legal-metrology-packaged-commodities-rules-2011",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "in-ndct-rules-phytopharmaceutical",
+      "target": "regime:drug_regulatory",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "in-ndct-rules-phytopharmaceutical",
+      "target": "jurisdiction:India",
+      "key": 0
+    },
+    {
+      "relation": "RELEVANT_TO_CATEGORY",
+      "source": "in-ndct-rules-phytopharmaceutical",
+      "target": "category:r_phytopharmaceutical",
+      "key": 0
+    },
+    {
+      "relation": "RELEVANT_TO_CATEGORY",
+      "source": "in-ndct-rules-phytopharmaceutical",
+      "target": "category:r_new_drug",
+      "key": 0
+    },
+    {
+      "relation": "ADMINISTERED_BY",
+      "source": "in-ndct-rules-phytopharmaceutical",
+      "target": "institution:CDSCO",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "in-magic-remedies-act-1954",
+      "target": "regime:advertising",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "in-magic-remedies-act-1954",
+      "target": "jurisdiction:India",
+      "key": 0
+    },
+    {
+      "relation": "RELEVANT_TO_CATEGORY",
+      "source": "in-magic-remedies-act-1954",
+      "target": "category:r_ayurveda_aahar",
+      "key": 0
+    },
+    {
+      "relation": "COMPLEMENTS",
+      "source": "in-magic-remedies-act-1954",
+      "target": "in-consumer-protection-act-2019-misleading-ads",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "in-fssai-ayurveda-aahara-2022",
+      "target": "regime:food_cosmetic",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "in-fssai-ayurveda-aahara-2022",
+      "target": "jurisdiction:India",
+      "key": 0
+    },
+    {
+      "relation": "RELEVANT_TO_CATEGORY",
+      "source": "in-fssai-ayurveda-aahara-2022",
+      "target": "category:r_ayurveda_aahar",
+      "key": 0
+    },
+    {
+      "relation": "ADMINISTERED_BY",
+      "source": "in-fssai-ayurveda-aahara-2022",
+      "target": "institution:FSSAI",
+      "key": 0
+    },
+    {
+      "relation": "CONSTRAINED_BY",
+      "source": "in-fssai-ayurveda-aahara-2022",
+      "target": "in-magic-remedies-act-1954",
+      "key": 0
+    },
+    {
+      "relation": "LABELLING_GOVERNED_BY",
+      "source": "in-fssai-ayurveda-aahara-2022",
+      "target": "in-legal-metrology-packaged-commodities-rules-2011",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "in-dpdp-act-2023",
+      "target": "regime:data_protection",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "in-dpdp-act-2023",
+      "target": "jurisdiction:India",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "in-patents-3j",
+      "target": "regime:patent",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "in-patents-3j",
+      "target": "jurisdiction:India",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "in-patents-opposition-revocation",
+      "target": "regime:patent",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "in-patents-opposition-revocation",
+      "target": "jurisdiction:India",
+      "key": 0
+    },
+    {
+      "relation": "ENFORCES",
+      "source": "in-patents-opposition-revocation",
+      "target": "in-patents-3p",
+      "key": 0
+    },
+    {
+      "relation": "ENFORCES",
+      "source": "in-patents-opposition-revocation",
+      "target": "in-patents-form1-source-disclosure",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "in-trademarks-infringement-passing-off",
+      "target": "regime:trademark",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "in-trademarks-infringement-passing-off",
+      "target": "jurisdiction:India",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "in-gi-infringement-authorised-users",
+      "target": "regime:gi",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "in-gi-infringement-authorised-users",
+      "target": "jurisdiction:India",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "in-copyright-infringement",
+      "target": "regime:copyright",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "in-copyright-infringement",
+      "target": "jurisdiction:India",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "in-designs-piracy",
+      "target": "regime:design",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "in-designs-piracy",
+      "target": "jurisdiction:India",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "in-biodiversity-nba-functions",
+      "target": "regime:biodiversity_abs",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "in-biodiversity-nba-functions",
+      "target": "jurisdiction:India",
+      "key": 0
+    },
+    {
+      "relation": "ADMINISTERED_BY",
+      "source": "in-biodiversity-nba-functions",
+      "target": "institution:NBA",
+      "key": 0
+    },
+    {
+      "relation": "DETAILS",
+      "source": "in-biodiversity-nba-functions",
+      "target": "in-biodiversity-act-2002-2023-amendment",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "in-national-ipr-policy-2016",
+      "target": "regime:patent",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "in-national-ipr-policy-2016",
+      "target": "jurisdiction:India",
+      "key": 0
+    },
+    {
+      "relation": "UMBRELLA_OVER",
+      "source": "in-national-ipr-policy-2016",
+      "target": "in-patents-3p",
+      "key": 0
+    },
+    {
+      "relation": "UMBRELLA_OVER",
+      "source": "in-national-ipr-policy-2016",
+      "target": "in-gi-act-1999",
+      "key": 0
+    },
+    {
+      "relation": "UMBRELLA_OVER",
+      "source": "in-national-ipr-policy-2016",
+      "target": "in-trademarks-act-1999",
+      "key": 0
+    },
+    {
+      "relation": "UMBRELLA_OVER",
+      "source": "in-national-ipr-policy-2016",
+      "target": "in-tkdl",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "in-consumer-protection-act-2019-misleading-ads",
+      "target": "regime:advertising",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "in-consumer-protection-act-2019-misleading-ads",
+      "target": "jurisdiction:India",
+      "key": 0
+    },
+    {
+      "relation": "ADMINISTERED_BY",
+      "source": "in-consumer-protection-act-2019-misleading-ads",
+      "target": "institution:CCPA",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "in-legal-metrology-packaged-commodities-rules-2011",
+      "target": "regime:food_cosmetic",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "in-legal-metrology-packaged-commodities-rules-2011",
+      "target": "jurisdiction:India",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "intl-trips-art27",
+      "target": "regime:treaty",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "intl-trips-art27",
+      "target": "jurisdiction:International",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "intl-cbd-1992",
+      "target": "regime:treaty",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "intl-cbd-1992",
+      "target": "jurisdiction:International",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "intl-nagoya-protocol-2010",
+      "target": "regime:treaty",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "intl-nagoya-protocol-2010",
+      "target": "jurisdiction:International",
+      "key": 0
+    },
+    {
+      "relation": "IMPLEMENTS",
+      "source": "intl-nagoya-protocol-2010",
+      "target": "intl-cbd-1992",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "intl-wipo-gratk-treaty-2024",
+      "target": "regime:treaty",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "intl-wipo-gratk-treaty-2024",
+      "target": "jurisdiction:International",
+      "key": 0
+    },
+    {
+      "relation": "RELEVANT_TO_CATEGORY",
+      "source": "intl-wipo-gratk-treaty-2024",
+      "target": "category:r_phytopharmaceutical",
+      "key": 0
+    },
+    {
+      "relation": "ADMINISTERED_BY",
+      "source": "intl-wipo-gratk-treaty-2024",
+      "target": "institution:WIPO",
+      "key": 0
+    },
+    {
+      "relation": "RELATED_TO",
+      "source": "intl-wipo-gratk-treaty-2024",
+      "target": "intl-nagoya-protocol-2010",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "intl-pct",
+      "target": "regime:treaty",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "intl-pct",
+      "target": "jurisdiction:International",
+      "key": 0
+    },
+    {
+      "relation": "ADMINISTERED_BY",
+      "source": "intl-pct",
+      "target": "institution:WIPO",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "intl-madrid-system",
+      "target": "regime:trademark",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "intl-madrid-system",
+      "target": "jurisdiction:International",
+      "key": 0
+    },
+    {
+      "relation": "ADMINISTERED_BY",
+      "source": "intl-madrid-system",
+      "target": "institution:WIPO",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "intl-hague-system",
+      "target": "regime:design",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "intl-hague-system",
+      "target": "jurisdiction:International",
+      "key": 0
+    },
+    {
+      "relation": "ADMINISTERED_BY",
+      "source": "intl-hague-system",
+      "target": "institution:WIPO",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "intl-budapest-treaty",
+      "target": "regime:patent",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "intl-budapest-treaty",
+      "target": "jurisdiction:International",
+      "key": 0
+    },
+    {
+      "relation": "ADMINISTERED_BY",
+      "source": "intl-budapest-treaty",
+      "target": "institution:WIPO",
+      "key": 0
+    },
+    {
+      "relation": "RELATED_TO",
+      "source": "intl-budapest-treaty",
+      "target": "in-ndct-rules-phytopharmaceutical",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "intl-who-traditional-medicine",
+      "target": "regime:market_access",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "intl-who-traditional-medicine",
+      "target": "jurisdiction:International",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "intl-us-dshea",
+      "target": "regime:market_access",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "intl-us-dshea",
+      "target": "jurisdiction:International",
+      "key": 0
+    },
+    {
+      "relation": "ANALOGOUS_TO",
+      "source": "intl-us-dshea",
+      "target": "in-dc-act-classical-drugs",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "intl-eu-thmpd",
+      "target": "regime:market_access",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "intl-eu-thmpd",
+      "target": "jurisdiction:International",
+      "key": 0
+    },
+    {
+      "relation": "ANALOGOUS_TO",
+      "source": "intl-eu-thmpd",
+      "target": "in-dc-act-classical-drugs",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "intl-wipo-igc",
+      "target": "regime:treaty",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "intl-wipo-igc",
+      "target": "jurisdiction:International",
+      "key": 0
+    },
+    {
+      "relation": "ADMINISTERED_BY",
+      "source": "intl-wipo-igc",
+      "target": "institution:WIPO",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "intl-paris-convention",
+      "target": "regime:treaty",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "intl-paris-convention",
+      "target": "jurisdiction:International",
+      "key": 0
+    },
+    {
+      "relation": "ADMINISTERED_BY",
+      "source": "intl-paris-convention",
+      "target": "institution:WIPO",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "intl-trips-art39-trade-secrets",
+      "target": "regime:treaty",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "intl-trips-art39-trade-secrets",
+      "target": "jurisdiction:International",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "intl-upov-convention",
+      "target": "regime:plant_variety",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "intl-upov-convention",
+      "target": "jurisdiction:International",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "intl-berne-convention",
+      "target": "regime:copyright",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "intl-berne-convention",
+      "target": "jurisdiction:International",
+      "key": 0
+    },
+    {
+      "relation": "ADMINISTERED_BY",
+      "source": "intl-berne-convention",
+      "target": "institution:WIPO",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "intl-lisbon-geneva-act-gi",
+      "target": "regime:gi",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "intl-lisbon-geneva-act-gi",
+      "target": "jurisdiction:International",
+      "key": 0
+    },
+    {
+      "relation": "ADMINISTERED_BY",
+      "source": "intl-lisbon-geneva-act-gi",
+      "target": "institution:WIPO",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "intl-australia-tga-listed-medicines",
+      "target": "regime:market_access",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "intl-australia-tga-listed-medicines",
+      "target": "jurisdiction:International",
+      "key": 0
+    },
+    {
+      "relation": "ANALOGOUS_TO",
+      "source": "intl-australia-tga-listed-medicines",
+      "target": "in-dc-act-classical-drugs",
+      "key": 0
+    },
+    {
+      "relation": "BELONGS_TO_REGIME",
+      "source": "intl-health-canada-nhp",
+      "target": "regime:market_access",
+      "key": 0
+    },
+    {
+      "relation": "IN_JURISDICTION",
+      "source": "intl-health-canada-nhp",
+      "target": "jurisdiction:International",
+      "key": 0
+    },
+    {
+      "relation": "ANALOGOUS_TO",
+      "source": "intl-health-canada-nhp",
+      "target": "in-dc-act-classical-drugs",
+      "key": 0
+    }
+  ]
+}

@@ -1,0 +1,854 @@
+[
+  {
+    "id": "in-patents-3p",
+    "jurisdiction": "India",
+    "regime": "patent",
+    "title": "Traditional-knowledge bar on patentability",
+    "instrument": "Patents Act, 1970",
+    "citation": "Section 3(p)",
+    "instrument_type": "statute",
+    "summary": "Section 3(p) excludes from patentability 'an invention which, in effect, is traditional knowledge or which is an aggregation or duplication of known properties of traditionally known component(s)'. This is the single biggest hurdle for classical Ayurvedic formulations: if a claim is just the known formulation/method from a First-Schedule authoritative text, or a known plant's known property, it is not patentable in India, however it is worded. Genuine patent potential opens up only where there is a real inventive step beyond the traditional knowledge (e.g. a new molecule isolated and characterised, a new delivery mechanism, a new clinically-proven indication with supporting data).",
+    "source_url": "https://www.indiacode.nic.in/handle/123456789/1388",
+    "source_name": "India Code – The Patents Act, 1970",
+    "last_verified": "2026-09-06",
+    "tags": [
+      "traditional knowledge",
+      "novelty bar",
+      "classical formulation",
+      "section 3p",
+      "TKDL"
+    ],
+    "full_text_excerpt": "3. What are not inventions.— The following are not inventions within the meaning of this Act,— ... (p) an invention which, in effect, is traditional knowledge or which is an aggregation or duplication of known properties of traditionally known component or components."
+  },
+  {
+    "id": "in-patents-form1-source-disclosure",
+    "jurisdiction": "India",
+    "regime": "patent",
+    "title": "Mandatory disclosure of source and geographical origin of biological material",
+    "instrument": "Patents Act, 1970",
+    "citation": "Section 10(4)(ii)(D) read with Section 6 & Form 1",
+    "instrument_type": "statute",
+    "summary": "Every Indian patent application whose invention uses biological material obtained from India must disclose the source and geographical origin of that material in the specification/Form 1. Non-disclosure or wrongful disclosure is itself a ground for opposition/revocation under Sections 25 and 64. For Ayurvedic inventions built on Indian medicinal plants, microbes or animal-derived material, this disclosure duty sits alongside (and is separate from) the Biological Diversity Act approval requirement below — both must be satisfied.",
+    "source_url": "https://www.indiacode.nic.in/handle/123456789/1388",
+    "source_name": "India Code – The Patents Act, 1970",
+    "last_verified": "2026-09-01",
+    "tags": [
+      "biological material",
+      "source disclosure",
+      "patent",
+      "ABS"
+    ]
+  },
+  {
+    "id": "in-patents-amendment-rules-2024",
+    "jurisdiction": "India",
+    "regime": "patent",
+    "title": "Patents (Amendment) Rules, 2024 – procedural changes relevant to Ayurveda applicants",
+    "instrument": "Patents (Amendment) Rules, 2024",
+    "citation": "Rules amending the Patents Rules, 2003 (notified March 2024)",
+    "instrument_type": "rule",
+    "summary": "Key 2024 changes an Ayurveda applicant should know: (1) the request for examination window was shortened to 31 months from priority/filing date; (2) a new grace-period mechanism (Rule 29A, Form 31) lets an inventor who has already publicly disclosed an invention (e.g. at a conference or in a journal) still file a valid patent application within the statutory grace period; (3) the working-statement filing (Form 27) is now required once every three financial years instead of annually, easing compliance for small AYUSH innovators; (4) pre-grant opposition procedure was streamlined with defined timelines for the Controller's prima facie assessment.",
+    "source_url": "https://www.ipindia.gov.in/writereaddata/Portal/News/895_1_Patent_Amendment_Rules_2024.pdf",
+    "source_name": "Office of the Controller General of Patents, Designs & Trade Marks (IPO)",
+    "last_verified": "2026-09-01",
+    "tags": [
+      "2024 rules",
+      "grace period",
+      "request for examination",
+      "form 27",
+      "pre-grant opposition"
+    ]
+  },
+  {
+    "id": "in-biodiversity-act-2002-2023-amendment",
+    "jurisdiction": "India",
+    "regime": "biodiversity_abs",
+    "title": "Biological Diversity Act, 2002 (as amended in 2023) – Access and Benefit Sharing duties",
+    "instrument": "Biological Diversity Act, 2002 / Biological Diversity (Amendment) Act, 2023",
+    "citation": "Sections 3, 6, 7 & 21 (as amended)",
+    "instrument_type": "statute",
+    "summary": "Anyone seeking IP rights (in India or abroad) over an invention based on biological resources obtained from India needs prior approval of the National Biodiversity Authority (NBA) before the IP is granted, and benefit-sharing terms are fixed with the NBA. The 2023 amendment eased several long-standing friction points for the AYUSH sector: it exempts registered AYUSH practitioners and local/traditional healers practising the Indian systems of medicine, and codified traditional knowledge, from certain approval requirements; widens the definition of 'codified traditional knowledge'; simplifies compliance for the AYUSH industry, cultivators and Indian companies; and decriminalises several offences by replacing imprisonment with monetary penalties (compounding).",
+    "source_url": "https://egazette.gov.in/WriteReadData/2023/247815.pdf",
+    "source_name": "e-Gazette of India – Biological Diversity (Amendment) Act, 2023 (No. 10 of 2023)",
+    "last_verified": "2026-09-06",
+    "tags": [
+      "ABS",
+      "NBA",
+      "biological resources",
+      "AYUSH exemption",
+      "codified traditional knowledge"
+    ],
+    "full_text_excerpt": "3. (1) No person referred to in sub-section (2) shall, without previous approval of the National Biodiversity Authority, obtain any biological resource occurring in India or knowledge associated thereto for research or for commercial utilisation or for bio-survey and bio-utilisation."
+  },
+  {
+    "id": "in-biodiversity-rules-2024",
+    "jurisdiction": "India",
+    "regime": "biodiversity_abs",
+    "title": "Biological Diversity Rules, 2024 – simplified ABS approval procedure",
+    "instrument": "Biological Diversity Rules, 2024",
+    "citation": "Biological Diversity Rules, 2024 (in supersession of the 2004 Rules)",
+    "instrument_type": "rule",
+    "summary": "Notified by the Ministry of Environment, Forest and Climate Change in October 2024, these rules operationalise the 2023 Act amendments: they lay down simplified, time-bound procedures for seeking NBA/State Biodiversity Board approval before applying for IP or transferring research results, prescribe benefit-sharing formulae linked to the commercial value of the product, and set out the reduced compliance burden for AYUSH manufacturers, cultivators of medicinal plants and codified-traditional-knowledge users introduced by the 2023 amendment.",
+    "source_url": "https://moef.gov.in/",
+    "source_name": "Ministry of Environment, Forest and Climate Change (MoEFCC)",
+    "last_verified": "2026-09-01",
+    "tags": [
+      "ABS",
+      "NBA",
+      "biodiversity rules 2024",
+      "benefit sharing"
+    ]
+  },
+  {
+    "id": "in-tkdl",
+    "jurisdiction": "India",
+    "regime": "patent",
+    "title": "Traditional Knowledge Digital Library (TKDL) – defensive prior-art protection",
+    "instrument": "Administered by CSIR & Ministry of Ayush",
+    "citation": "TKDL Access (Non-Disclosure) Agreements with IP offices",
+    "instrument_type": "registry",
+    "summary": "TKDL is a searchable database that translates and codifies existing Ayurveda, Siddha, Unani and Yoga knowledge from classical texts into patent-office-usable prior art, in five international languages and IPC-linked classification. It is not public; it is made available under non-disclosure access agreements to patent examiners at major offices (India, EPO, USPTO, UKIPO, JPO, CGPDTM, and others) specifically so a classical/known Ayurvedic formulation cannot be wrongly patented abroad for lack of accessible prior art. For an applicant, TKDL is best used as a pointer: search whether your formulation or a close variant is already documented there — if so, expect a Section 3(p)-type objection domestically and a prior-art citation internationally, and plan the IP strategy (trade secret, GI, or genuine inventive improvement) accordingly.",
+    "source_url": "http://www.tkdl.res.in/",
+    "source_name": "Traditional Knowledge Digital Library (CSIR)",
+    "last_verified": "2026-09-01",
+    "tags": [
+      "TKDL",
+      "prior art",
+      "defensive protection",
+      "biopiracy"
+    ]
+  },
+  {
+    "id": "in-gi-act-1999",
+    "jurisdiction": "India",
+    "regime": "gi",
+    "title": "Geographical Indications of Goods (Registration and Protection) Act, 1999",
+    "instrument": "Geographical Indications of Goods (Registration and Protection) Act, 1999",
+    "citation": "Sections 2, 11 & 22",
+    "instrument_type": "statute",
+    "summary": "GI registration protects a name identifying a good as originating from a specific region where a given quality, reputation or characteristic is essentially attributable to that geographic origin — e.g. a specific district's variety of a medicinal plant or a regionally-distinct Ayurvedic preparation method. Unlike a patent, a GI does not expire (subject to renewal) and does not require novelty or inventive step — it protects collective, place-based reputation, which fits community-held Ayurvedic knowledge much better than patent law does. Registration is with the GI Registry, Chennai, and is applied for by an association of producers/growers/manufacturers, not an individual.",
+    "source_url": "https://www.indiacode.nic.in/handle/123456789/1889",
+    "source_name": "India Code – GI Act, 1999",
+    "last_verified": "2026-09-01",
+    "tags": [
+      "geographical indication",
+      "community knowledge",
+      "collective rights"
+    ]
+  },
+  {
+    "id": "in-trademarks-act-1999",
+    "jurisdiction": "India",
+    "regime": "trademark",
+    "title": "Trade Marks Act, 1999 – branding proprietary Ayurvedic products",
+    "instrument": "Trade Marks Act, 1999",
+    "citation": "Sections 9 & 11",
+    "instrument_type": "statute",
+    "summary": "A trademark protects the brand name/logo used to sell a proprietary Ayurvedic medicine or Ayurveda-Aahar product — it does not protect the formulation itself. Section 9 bars registration of marks that are generic or merely descriptive of the product's kind, quality or ingredients (a common failure mode for Ayurvedic brand names built directly on a Sanskrit/generic ingredient or disease name), and Section 11 bars marks confusingly similar to earlier marks. Trademark protection is renewable indefinitely, making it a durable complement to a time-limited patent or a defensively-protected classical formulation.",
+    "source_url": "https://www.indiacode.nic.in/handle/123456789/1993",
+    "source_name": "India Code – Trade Marks Act, 1999",
+    "last_verified": "2026-09-01",
+    "tags": [
+      "trademark",
+      "branding",
+      "distinctiveness"
+    ]
+  },
+  {
+    "id": "in-designs-act-2000",
+    "jurisdiction": "India",
+    "regime": "design",
+    "title": "Designs Act, 2000 – protecting product and packaging appearance",
+    "instrument": "Designs Act, 2000",
+    "citation": "Section 4",
+    "instrument_type": "statute",
+    "summary": "Registrable designs protect the new and original visual features of shape, configuration, pattern or ornamentation applied to an article — relevant to a distinctive bottle, applicator, or packaging shape for an Ayurvedic product, but not to the formulation, function or any method of use. Protection lasts up to 15 years (10 years + 5-year renewal) and registration must be sought before the design is publicly disclosed.",
+    "source_url": "https://www.indiacode.nic.in/handle/123456789/2004",
+    "source_name": "India Code – Designs Act, 2000",
+    "last_verified": "2026-09-01",
+    "tags": [
+      "design",
+      "packaging",
+      "novelty"
+    ]
+  },
+  {
+    "id": "in-copyright-act-1957",
+    "jurisdiction": "India",
+    "regime": "copyright",
+    "title": "Copyright Act, 1957 – what copyright does and does not protect for Ayurveda",
+    "instrument": "Copyright Act, 1957",
+    "citation": "Section 13",
+    "instrument_type": "statute",
+    "summary": "Copyright protects original literary, artistic and compilation works — e.g. a company's own written description of its manufacturing process, packaging artwork, a website, or a compiled/annotated database of formulations — but never the underlying idea, formulation, or method itself, and never a classical text that is already in the public domain. It arises automatically on creation (registration is optional evidence, not a precondition) and lasts for the author's life plus 60 years for most works.",
+    "source_url": "https://www.indiacode.nic.in/handle/123456789/1367",
+    "source_name": "India Code – Copyright Act, 1957",
+    "last_verified": "2026-09-01",
+    "tags": [
+      "copyright",
+      "literary work",
+      "public domain"
+    ]
+  },
+  {
+    "id": "in-ppvfr-act-2001",
+    "jurisdiction": "India",
+    "regime": "plant_variety",
+    "title": "Protection of Plant Varieties and Farmers' Rights Act, 2001",
+    "instrument": "Protection of Plant Varieties and Farmers' Rights (PPV&FR) Act, 2001",
+    "citation": "Sections 14, 15 & 39",
+    "instrument_type": "statute",
+    "summary": "Relevant to Ayurvedic-plant cultivators and breeders: a new plant variety (including of a medicinal plant) that is novel, distinct, uniform and stable can be registered for exclusive commercial rights, while Section 39 separately protects farmers' rights to save, use, exchange and sell farm produce of a registered variety (subject to conditions), and recognises farmers as conservers/contributors eligible for reward from the National Gene Fund. This sits alongside, not instead of, any Biological Diversity Act ABS obligation.",
+    "source_url": "https://www.indiacode.nic.in/handle/123456789/2016",
+    "source_name": "India Code – PPV&FR Act, 2001",
+    "last_verified": "2026-09-01",
+    "tags": [
+      "plant variety",
+      "farmers rights",
+      "cultivation",
+      "medicinal plants"
+    ]
+  },
+  {
+    "id": "in-dc-act-classical-drugs",
+    "jurisdiction": "India",
+    "regime": "drug_regulatory",
+    "title": "Classical (First-Schedule) and patent-or-proprietary Ayurvedic medicines",
+    "instrument": "Drugs and Cosmetics Act, 1940 & Rules, 1945",
+    "citation": "Section 3(a)/3(h); First Schedule; Rule 158-B",
+    "instrument_type": "statute",
+    "summary": "A classical/generic Ayurvedic, Siddha or Unani (ASU) drug is one whose formulation and method of preparation are described exactly in an authoritative text listed in the First Schedule to the Act — for these, no fresh safety/efficacy studies are required for a manufacturing licence, only compliance with Good Manufacturing Practices (Schedule T) and the classical reference itself. A 'patent or proprietary' Ayurvedic medicine uses only ingredients named in the First-Schedule texts but in a formulation not exactly described there; licensing generally requires published literature/pilot evidence of the ingredients' effectiveness, and if any ingredient falls under Schedule E(1) (potent/restricted ingredients), full safety and effectiveness data plus clinical evidence become mandatory. This classical/proprietary split is the starting point of the IP-and-regulatory posture: classical formulations are largely undivided traditional knowledge (Section 3(p) patent bar, TKDL-defended); proprietary and new formulations open up real, defensible IP but require real evidence.",
+    "source_url": "https://cdsco.gov.in/opencms/export/sites/CDSCO_WEB/Pdf-documents/acts_rules/2016DrugsandCosmeticsAct1940Rules1945.pdf",
+    "source_name": "Central Drugs Standard Control Organisation (CDSCO)",
+    "last_verified": "2026-09-01",
+    "tags": [
+      "classical medicine",
+      "proprietary medicine",
+      "First Schedule",
+      "ASU drugs",
+      "formulation classification"
+    ]
+  },
+  {
+    "id": "in-ndct-rules-phytopharmaceutical",
+    "jurisdiction": "India",
+    "regime": "drug_regulatory",
+    "title": "Phytopharmaceutical drugs and new ASU drugs – evidence-based category",
+    "instrument": "New Drugs and Clinical Trials Rules, 2019 (under the Drugs and Cosmetics Act) / Drugs and Cosmetics Rules, 1945",
+    "citation": "New Drugs and Clinical Trials Rules, 2019, Chapter on phytopharmaceutical drugs; D&C Rules Rule 170",
+    "instrument_type": "rule",
+    "summary": "A 'phytopharmaceutical drug' is a purified, standardised fraction of a plant/botanical with defined, quantified marker compounds and qualitative/quantitative bio-active fraction, developed and licensed on the strength of pre-clinical and clinical safety-and-efficacy data — a genuinely evidence-based, patentable category distinct from classical Ayurveda, even where the source plant is traditionally used. A 'new' or non-classical ASU drug (a formulation not in any First-Schedule text, or a classical formulation used for a new indication/route/dosage) similarly requires proof of safety and effectiveness before licensing under Rule 170 of the D&C Rules. Both categories have real patent potential precisely because they generate new, non-traditional data and characterisation — but that data (toxicology, clinical trials) is the expensive part most AYUSH startups underestimate.",
+    "source_url": "https://cdsco.gov.in/opencms/export/sites/CDSCO_WEB/Pdf-documents/NewDrugsandClinicalTrialsRules2019.pdf",
+    "source_name": "Central Drugs Standard Control Organisation (CDSCO)",
+    "last_verified": "2026-09-01",
+    "tags": [
+      "phytopharmaceutical",
+      "new drug",
+      "clinical evidence",
+      "patent potential"
+    ]
+  },
+  {
+    "id": "in-magic-remedies-act-1954",
+    "jurisdiction": "India",
+    "regime": "advertising",
+    "title": "Drugs and Magic Remedies (Objectionable Advertisements) Act, 1954",
+    "instrument": "Drugs and Magic Remedies (Objectionable Advertisements) Act, 1954",
+    "citation": "Section 3 & Schedule",
+    "instrument_type": "statute",
+    "summary": "Prohibits advertisements (in any medium, including online) that claim a drug or 'magic remedy' can diagnose, cure, mitigate, treat or prevent any disease or condition listed in the Schedule (e.g. cancer, diabetes, sexual/reproductive conditions), and bars advertisements implying miraculous or supernatural effect. This applies directly to marketing copy, packaging claims and influencer content for Ayurvedic proprietary medicines and Ayurveda-Aahar products — IP protection of a brand or formulation does not exempt its advertising from this Act.",
+    "source_url": "https://www.indiacode.nic.in/handle/123456789/1608",
+    "source_name": "India Code – Drugs and Magic Remedies Act, 1954",
+    "last_verified": "2026-09-01",
+    "tags": [
+      "advertising",
+      "disease claims",
+      "labelling"
+    ]
+  },
+  {
+    "id": "in-fssai-ayurveda-aahara-2022",
+    "jurisdiction": "India",
+    "regime": "food_cosmetic",
+    "title": "FSSAI Ayurveda Aahara Regulations, 2022",
+    "instrument": "Food Safety and Standards (Ayurveda Aahara) Regulations, 2022",
+    "citation": "Category A, Schedule A & Schedule B",
+    "instrument_type": "regulation",
+    "summary": "Creates a distinct food-business category, 'Ayurveda Aahara', for preparations formulated strictly according to classical Ayurvedic texts listed in Schedule A, with a defined list of recognised products under Schedule B (extendable on application with textual references). These are regulated as food (FSSAI licensing), not as drugs — they must not carry disease-cure claims (which would instead trigger Drugs and Cosmetics Act / Magic Remedies Act exposure), and this food/drug boundary is one of the first classification questions for any Ayurveda-Aahar or nutraceutical product.",
+    "source_url": "https://www.fssai.gov.in/",
+    "source_name": "Food Safety and Standards Authority of India (FSSAI)",
+    "last_verified": "2026-09-01",
+    "tags": [
+      "Ayurveda Aahara",
+      "nutraceutical",
+      "food classification",
+      "FSSAI"
+    ]
+  },
+  {
+    "id": "in-dpdp-act-2023",
+    "jurisdiction": "India",
+    "regime": "data_protection",
+    "title": "Digital Personal Data Protection Act, 2023 – relevant to this assistant itself",
+    "instrument": "Digital Personal Data Protection Act, 2023",
+    "citation": "Sections 4-8 (consent & purpose limitation)",
+    "instrument_type": "statute",
+    "summary": "Governs processing of digital personal data in India: requires informed, specific consent (or a recognised legitimate use) before collecting personal data, purpose limitation, data minimisation, and gives individuals the right to access, correct and erase their data. This is the compliance backbone this assistant's own audit-log and paid-source-connector permission flow (see 'privacy & audit design' in the architecture doc) is aligned to: any query log, uploaded document, or linked paid-subscription credential is personal/confidential data and must be handled under an explicit, logged consent basis.",
+    "source_url": "https://www.indiacode.nic.in/handle/123456789/20182",
+    "source_name": "India Code – Digital Personal Data Protection Act, 2023",
+    "last_verified": "2026-09-01",
+    "tags": [
+      "DPDP",
+      "privacy",
+      "consent",
+      "audit"
+    ]
+  },
+  {
+    "id": "in-patents-3j",
+    "jurisdiction": "India",
+    "regime": "patent",
+    "title": "Exclusion of plants, animals and essentially biological processes",
+    "instrument": "Patents Act, 1970",
+    "citation": "Section 3(j)",
+    "instrument_type": "statute",
+    "summary": "Section 3(j) excludes from patentability 'plants and animals in whole or any part thereof other than micro-organisms; but including seeds, varieties and species and essentially biological processes for production or propagation of plants and animals'. For Ayurveda this matters alongside Section 3(p): even where a formulation involves something genuinely new about a plant (e.g. a novel cultivation or propagation method), a claim drawn to the plant/variety itself or to an 'essentially biological' process is barred here, separately from the traditional-knowledge bar. A genuinely patentable claim usually has to be drawn to an isolated compound, a microbial process, or a non-biological technical step instead.",
+    "source_url": "https://www.indiacode.nic.in/handle/123456789/1388",
+    "source_name": "India Code – The Patents Act, 1970",
+    "last_verified": "2026-09-06",
+    "tags": [
+      "plants exclusion",
+      "biological process",
+      "section 3j",
+      "patentability"
+    ]
+  },
+  {
+    "id": "in-patents-opposition-revocation",
+    "jurisdiction": "India",
+    "regime": "patent",
+    "title": "Challenging a wrongly granted Ayurveda-related patent",
+    "instrument": "Patents Act, 1970",
+    "citation": "Sections 25(1) (pre-grant), 25(2) (post-grant) & 64 (revocation)",
+    "instrument_type": "statute",
+    "summary": "Anyone (not just an 'interested person') can file pre-grant opposition under Section 25(1) before a patent is granted; a person interested can file post-grant opposition under Section 25(2) within 12 months of grant; and revocation can be sought at the Appellate Board/High Court under Section 64 at any time. For traditional-knowledge biopiracy cases (a foreign patent wrongly covering a known Ayurvedic use), the grounds that matter most are: the invention was already publicly known/used in India (prior art, often via TKDL), it is traditional knowledge (Section 3(p)), or the biological-material source was not disclosed (Section 10(4)(ii)(D)). This is the enforcement side of the defensive protection TKDL exists to support.",
+    "source_url": "https://www.indiacode.nic.in/handle/123456789/1388",
+    "source_name": "India Code – The Patents Act, 1970",
+    "last_verified": "2026-09-06",
+    "tags": [
+      "opposition",
+      "revocation",
+      "biopiracy",
+      "enforcement",
+      "TKDL"
+    ]
+  },
+  {
+    "id": "in-trademarks-infringement-passing-off",
+    "jurisdiction": "India",
+    "regime": "trademark",
+    "title": "Trademark infringement and passing off for Ayurvedic brands",
+    "instrument": "Trade Marks Act, 1999",
+    "citation": "Section 29 (infringement); common-law passing off",
+    "instrument_type": "statute",
+    "summary": "Section 29 gives a registered trademark owner a statutory infringement action against a deceptively similar mark used on similar goods. An unregistered Ayurvedic brand name still has a remedy through the common-law tort of passing off (established via the Trade Marks Act's savings of common-law rights plus case law), but passing off requires proving goodwill/reputation, misrepresentation, and damage — materially harder to establish than registered infringement. Practical takeaway for an AYUSH startup: register the brand early rather than relying on passing off, especially before scaling marketing spend.",
+    "source_url": "https://www.indiacode.nic.in/handle/123456789/1993",
+    "source_name": "India Code – Trade Marks Act, 1999",
+    "last_verified": "2026-09-06",
+    "tags": [
+      "trademark infringement",
+      "passing off",
+      "brand enforcement"
+    ]
+  },
+  {
+    "id": "in-gi-infringement-authorised-users",
+    "jurisdiction": "India",
+    "regime": "gi",
+    "title": "GI infringement and the authorised-user mechanism",
+    "instrument": "Geographical Indications of Goods (Registration and Protection) Act, 1999",
+    "citation": "Sections 20-22",
+    "instrument_type": "statute",
+    "summary": "Section 20 bars anyone who is not a registered proprietor or 'authorised user' from using a registered GI; Section 21 lets individual producers register as authorised users to enforce and benefit from a GI their association holds; Section 22 sets out infringement (unauthorised use, or use likely to mislead as to geographical origin). For an Ayurveda GI (e.g. a region-linked medicinal plant preparation), individual growers/manufacturers typically need to separately register as authorised users to invoke these rights themselves — the association's GI registration alone does not automatically give each member standing to sue.",
+    "source_url": "https://www.indiacode.nic.in/handle/123456789/1889",
+    "source_name": "India Code – GI Act, 1999",
+    "last_verified": "2026-09-06",
+    "tags": [
+      "GI infringement",
+      "authorised user",
+      "collective enforcement"
+    ]
+  },
+  {
+    "id": "in-copyright-infringement",
+    "jurisdiction": "India",
+    "regime": "copyright",
+    "title": "Copyright infringement remedies",
+    "instrument": "Copyright Act, 1957",
+    "citation": "Section 51",
+    "instrument_type": "statute",
+    "summary": "Section 51 defines infringement (unauthorised reproduction, communication to the public, or import of infringing copies of a protected work) and is the basis for civil remedies (injunction, damages, accounts of profits) plus criminal penalties under Section 63. For Ayurveda businesses this is most relevant to copied packaging artwork, website/marketing content, or a competitor lifting a company's own written product literature or compiled formulation database verbatim — never to the underlying formulation or classical-text content itself, which copyright cannot protect (see the base Copyright Act entry).",
+    "source_url": "https://www.indiacode.nic.in/handle/123456789/1367",
+    "source_name": "India Code – Copyright Act, 1957",
+    "last_verified": "2026-09-06",
+    "tags": [
+      "copyright infringement",
+      "civil remedies",
+      "criminal penalties"
+    ]
+  },
+  {
+    "id": "in-designs-piracy",
+    "jurisdiction": "India",
+    "regime": "design",
+    "title": "Piracy of a registered design",
+    "instrument": "Designs Act, 2000",
+    "citation": "Section 22",
+    "instrument_type": "statute",
+    "summary": "Section 22 prohibits applying a registered design (or a fraudulent/obvious imitation of it) to any article in the same class without the registered proprietor's consent, for the purpose of sale. Remedy is a suit for recovery of a (capped) contract debt/damages, plus injunction. Relevant when a competitor copies a distinctive Ayurvedic-product bottle, applicator or packaging shape that was properly registered as a design before disclosure (registering after public disclosure forfeits novelty and the registration can be cancelled).",
+    "source_url": "https://www.indiacode.nic.in/handle/123456789/2004",
+    "source_name": "India Code – Designs Act, 2000",
+    "last_verified": "2026-09-06",
+    "tags": [
+      "design piracy",
+      "packaging enforcement"
+    ]
+  },
+  {
+    "id": "in-biodiversity-nba-functions",
+    "jurisdiction": "India",
+    "regime": "biodiversity_abs",
+    "title": "National Biodiversity Authority: functions and the approval process",
+    "instrument": "Biological Diversity Act, 2002 (as amended in 2023)",
+    "citation": "Sections 8, 18 & 19",
+    "instrument_type": "statute",
+    "summary": "The National Biodiversity Authority (NBA) — a statutory body under Section 8 — regulates access to biological resources and associated knowledge (Section 18: advising government, laying down ABS guidelines, opposing wrongly-granted IP abroad over Indian biological resources/knowledge) and grants or refuses approval for access/commercial utilisation/IP applications under Section 19 after considering benefit-sharing terms. For an Ayurveda applicant this is the specific body to approach (via the online NBA portal, per the simplified Biological Diversity Rules, 2024 procedure) before commercialising or filing IP over a formulation using Indian biological resources, unless the 2023 amendment's AYUSH/codified-TK exemption applies.",
+    "source_url": "http://nbaindia.org/",
+    "source_name": "National Biodiversity Authority (NBA)",
+    "last_verified": "2026-09-06",
+    "tags": [
+      "NBA",
+      "approval process",
+      "ABS",
+      "functions"
+    ]
+  },
+  {
+    "id": "in-national-ipr-policy-2016",
+    "jurisdiction": "India",
+    "regime": "patent",
+    "title": "National IPR Policy, 2016 — the overarching policy umbrella",
+    "instrument": "National Intellectual Property Rights Policy, 2016",
+    "citation": "Adopted by the Union Cabinet, 12 May 2016",
+    "instrument_type": "guidance",
+    "summary": "A policy document (not law) themed 'Creative India; Innovative India', setting seven objectives spanning IP awareness, generation, a stronger legal/legislative framework, administration and enforcement — and explicitly naming traditional knowledge and TKDL as priorities. It created the Cell for IPR Promotion and Management (CIPAM) under the Department for Promotion of Industry and Internal Trade (DPIIT) as the implementing body, which runs AYUSH-relevant IP facilitation and awareness programmes. Useful as background context for why India's IP-and-Ayurveda institutional landscape (IP offices, TKDL, NBA coordination) looks the way it does, rather than as a source of enforceable rights itself.",
+    "source_url": "https://dpiit.gov.in/policies-rules-and-acts/policies/national-ipr-policy",
+    "source_name": "Department for Promotion of Industry and Internal Trade (DPIIT)",
+    "last_verified": "2026-09-06",
+    "tags": [
+      "national policy",
+      "CIPAM",
+      "DPIIT",
+      "background context"
+    ]
+  },
+  {
+    "id": "in-consumer-protection-act-2019-misleading-ads",
+    "jurisdiction": "India",
+    "regime": "advertising",
+    "title": "Consumer Protection Act, 2019 — misleading-advertisement powers",
+    "instrument": "Consumer Protection Act, 2019",
+    "citation": "Sections 2(28) & 21",
+    "instrument_type": "statute",
+    "summary": "Section 2(28) defines a 'misleading advertisement' broadly (false description, false guarantee, likely to mislead as to nature/substance/quality, or omitting material information); Section 21 empowers the Central Consumer Protection Authority (CCPA) to order an advertisement discontinued, impose penalties, and separately penalise endorsers (including influencers/celebrities) who fail to exercise due diligence on the claims they endorse. This runs alongside, not instead of, the Drugs and Magic Remedies Act's disease-claim-specific bar — a misleading Ayurvedic-product ad can trigger both regimes at once, and the CCPA's endorser liability is the newer, less well-known exposure for influencer marketing campaigns.",
+    "source_url": "https://www.indiacode.nic.in/handle/123456789/15256",
+    "source_name": "India Code – Consumer Protection Act, 2019",
+    "last_verified": "2026-09-06",
+    "tags": [
+      "misleading advertisement",
+      "CCPA",
+      "endorser liability",
+      "influencer marketing"
+    ]
+  },
+  {
+    "id": "in-legal-metrology-packaged-commodities-rules-2011",
+    "jurisdiction": "India",
+    "regime": "food_cosmetic",
+    "title": "Legal Metrology (Packaged Commodities) Rules, 2011 — mandatory package declarations",
+    "instrument": "Legal Metrology (Packaged Commodities) Rules, 2011",
+    "citation": "Rule 6",
+    "instrument_type": "rule",
+    "summary": "Requires every pre-packaged commodity (including Ayurvedic medicines, Ayurveda-Aahar products and cosmetics) to declare the manufacturer's/packer's/importer's name and address, net quantity, month and year of manufacture, retail sale price, and consumer-care contact details on the label. This is a distinct, cumulative labelling requirement on top of the Drugs and Cosmetics Act's own labelling rules (Schedule N-type requirements) and FSSAI's Ayurveda Aahara labelling — a product can be fully licensed as a drug/food and still be non-compliant if the outer package skips a Legal Metrology declaration.",
+    "source_url": "https://www.indiacode.nic.in/handle/123456789/2093",
+    "source_name": "India Code / Department of Consumer Affairs – Legal Metrology Rules",
+    "last_verified": "2026-09-06",
+    "tags": [
+      "labelling",
+      "packaging declarations",
+      "legal metrology"
+    ]
+  },
+  {
+    "id": "intl-trips-art27",
+    "jurisdiction": "International",
+    "regime": "treaty",
+    "title": "TRIPS Agreement – patentable subject matter baseline",
+    "instrument": "Agreement on Trade-Related Aspects of Intellectual Property Rights (TRIPS), 1995",
+    "citation": "Article 27",
+    "instrument_type": "treaty",
+    "summary": "Sets the WTO-wide floor: patents must be available for any invention, product or process, in all fields of technology, provided it is new, involves an inventive step and is capable of industrial application — but members may exclude inventions whose commercial exploitation would be contrary to public order or morality (including to protect human, animal or plant health), and may exclude certain plant/animal and biological-process subject matter (Article 27.3). Each WTO member (India included) implements this floor through its own domestic patent law, which is why the India-specific Section 3(p) bar and other national exclusions exist on top of, not instead of, TRIPS.",
+    "source_url": "https://www.wto.org/english/docs_e/legal_e/27-trips.pdf",
+    "source_name": "World Trade Organization – TRIPS Agreement text",
+    "last_verified": "2026-09-06",
+    "tags": [
+      "TRIPS",
+      "patentability",
+      "WTO",
+      "baseline standard"
+    ],
+    "full_text_excerpt": "Article 27.1: Subject to the provisions of paragraphs 2 and 3, patents shall be available for any inventions, whether products or processes, in all fields of technology, provided that they are new, involve an inventive step and are capable of industrial application."
+  },
+  {
+    "id": "intl-cbd-1992",
+    "jurisdiction": "International",
+    "regime": "treaty",
+    "title": "Convention on Biological Diversity – sovereignty over genetic resources",
+    "instrument": "Convention on Biological Diversity (CBD), 1992",
+    "citation": "Articles 3 & 15",
+    "instrument_type": "treaty",
+    "summary": "Establishes that states have sovereign rights over the biological resources within their territory, and that access to genetic resources is subject to national legislation and requires prior informed consent (PIC) of the providing country plus mutually agreed terms (MAT) for benefit-sharing. This is the international-law foundation for India's Biological Diversity Act; any foreign entity accessing an Indian medicinal plant, its genetic material or associated traditional knowledge is expected to comply with both this treaty framework and India's domestic ABS law.",
+    "source_url": "https://www.cbd.int/convention/text/",
+    "source_name": "Convention on Biological Diversity (CBD) Secretariat",
+    "last_verified": "2026-09-06",
+    "tags": [
+      "CBD",
+      "sovereignty",
+      "genetic resources",
+      "ABS"
+    ],
+    "full_text_excerpt": "Article 15.1: Recognizing the sovereign rights of States over their natural resources, the authority to determine access to genetic resources rests with the national governments and is subject to national legislation."
+  },
+  {
+    "id": "intl-nagoya-protocol-2010",
+    "jurisdiction": "International",
+    "regime": "treaty",
+    "title": "Nagoya Protocol on Access and Benefit-Sharing",
+    "instrument": "Nagoya Protocol on Access to Genetic Resources and the Fair and Equitable Sharing of Benefits Arising from their Utilization, 2010",
+    "citation": "Articles 5, 6 & 7",
+    "instrument_type": "treaty",
+    "summary": "Implements the CBD's ABS pillar in binding detail: parties must take measures ensuring benefits from utilisation of genetic resources (and, where applicable, associated traditional knowledge) are shared fairly with the providing country, and must ensure access happened with prior informed consent and on mutually agreed terms. It entered into force in 2014; India is a party. For an Ayurveda business exporting to or partnering with entities in another Nagoya party state, ABS compliance obligations can attach on both the Indian (Biological Diversity Act/NBA) and the destination-country side.",
+    "source_url": "https://www.cbd.int/abs/",
+    "source_name": "CBD Secretariat – Nagoya Protocol",
+    "last_verified": "2026-09-06",
+    "tags": [
+      "Nagoya Protocol",
+      "ABS",
+      "prior informed consent",
+      "mutually agreed terms"
+    ],
+    "full_text_excerpt": "Article 5.1: In accordance with Article 15, paragraphs 3 and 7 of the Convention, benefits arising from the utilization of genetic resources as well as subsequent applications and commercialization shall be shared in a fair and equitable way with the Party providing such resources that is the country of origin of such resources or a Party that has acquired the genetic resources in accordance with the Convention. Such sharing shall be upon mutually agreed terms."
+  },
+  {
+    "id": "intl-wipo-gratk-treaty-2024",
+    "jurisdiction": "International",
+    "regime": "treaty",
+    "title": "WIPO Treaty on Intellectual Property, Genetic Resources and Associated Traditional Knowledge (2024)",
+    "instrument": "WIPO Treaty on Intellectual Property, Genetic Resources and Associated Traditional Knowledge",
+    "citation": "Adopted 24 May 2024, Articles 3-5",
+    "instrument_type": "treaty",
+    "summary": "The first WIPO treaty to directly address genetic resources and traditional knowledge in the patent system: where a claimed invention is based on genetic resources and/or associated traditional knowledge, the patent applicant must disclose the country of origin (or source) of the genetic resources, and the country of origin (or source) of any associated traditional knowledge — or, if unknown, must declare that fact. Failure to disclose can trigger 'appropriate, effective and proportionate' remedies under national law (e.g. an opportunity to correct the omission), but a granted patent cannot be revoked or invalidated solely for non-disclosure unless there was fraudulent intent. The disclosure duty applies to applications filed after the treaty enters into force for a given party — it enters into force three months after 15 ratifications/accessions are deposited, and remained open for signature until 23 May 2025. This directly reinforces, at the international level, the source-disclosure duty that already exists in Indian patent law.",
+    "source_url": "https://www.wipo.int/en/web/treaties/ip/gratk/summary_gratk",
+    "source_name": "World Intellectual Property Organization (WIPO)",
+    "last_verified": "2026-09-01",
+    "tags": [
+      "WIPO GRATK Treaty",
+      "2024",
+      "disclosure requirement",
+      "genetic resources",
+      "traditional knowledge"
+    ]
+  },
+  {
+    "id": "intl-pct",
+    "jurisdiction": "International",
+    "regime": "treaty",
+    "title": "Patent Cooperation Treaty (PCT) – international patent filing route",
+    "instrument": "Patent Cooperation Treaty (PCT)",
+    "citation": "Chapters I & II",
+    "instrument_type": "treaty",
+    "summary": "Lets an applicant file a single international patent application (through the Indian Patent Office as a receiving office) that has the effect of a national filing in all 150++ PCT contracting states, with an international search and optional preliminary examination, before deciding (within 30-31 months of priority) which individual countries to enter national phase in. It does not itself grant a patent — each national/regional office still examines and grants under its own law (so India's Section 3(p) bar, for example, still applies at the Indian national-phase stage even if the PCT application proceeded internationally).",
+    "source_url": "https://www.wipo.int/pct/en/",
+    "source_name": "World Intellectual Property Organization (WIPO) – PCT",
+    "last_verified": "2026-09-01",
+    "tags": [
+      "PCT",
+      "international filing",
+      "national phase"
+    ]
+  },
+  {
+    "id": "intl-madrid-system",
+    "jurisdiction": "International",
+    "regime": "trademark",
+    "title": "Madrid System – international trademark registration",
+    "instrument": "Madrid Agreement & Madrid Protocol",
+    "citation": "Madrid Protocol, 1989",
+    "instrument_type": "treaty",
+    "summary": "Allows a trademark owner with a home (India) registration or application to file one international application, in one language, with one set of fees, designating any of the 130+ member states/regions, to seek trademark protection for an Ayurvedic brand abroad — far cheaper than filing separately in each export market. Protection in each designated country still depends on that country's substantive trademark law and can be refused there even if the India base registration stands.",
+    "source_url": "https://www.wipo.int/madrid/en/",
+    "source_name": "World Intellectual Property Organization (WIPO) – Madrid System",
+    "last_verified": "2026-09-01",
+    "tags": [
+      "Madrid Protocol",
+      "international trademark",
+      "brand protection abroad"
+    ]
+  },
+  {
+    "id": "intl-hague-system",
+    "jurisdiction": "International",
+    "regime": "design",
+    "title": "Hague System – international industrial design registration",
+    "instrument": "Hague Agreement Concerning the International Registration of Industrial Designs",
+    "citation": "Geneva Act, 1999",
+    "instrument_type": "treaty",
+    "summary": "Lets an applicant register an industrial design (e.g. a distinctive Ayurvedic-product bottle or packaging shape) in multiple member countries/regions through a single international application filed with WIPO, instead of filing separately in each country. Note: India is not yet a member of the Hague System, so an Indian applicant currently files internationally through WIPO only if eligible via another qualifying connection (e.g. an establishment or habitual residence in a member state), or otherwise still files nationally in each target market — always confirm current India-Hague membership status before relying on this route.",
+    "source_url": "https://www.wipo.int/hague/en/",
+    "source_name": "World Intellectual Property Organization (WIPO) – Hague System",
+    "last_verified": "2026-09-01",
+    "tags": [
+      "Hague Agreement",
+      "international design registration"
+    ]
+  },
+  {
+    "id": "intl-budapest-treaty",
+    "jurisdiction": "International",
+    "regime": "patent",
+    "title": "Budapest Treaty – deposit of micro-organisms for patent procedure",
+    "instrument": "Budapest Treaty on the International Recognition of the Deposit of Micro-organisms for the Purposes of Patent Procedure, 1977",
+    "citation": "Articles 3 & 6",
+    "instrument_type": "treaty",
+    "summary": "Where a patent application (e.g. for a fermented Ayurvedic preparation, a probiotic culture, or a microbe-derived active) cannot fully describe a micro-organism in writing, the applicant instead deposits a culture sample with an International Depositary Authority (IDA); that single deposit is then recognised for patent purposes by all Budapest Treaty contracting states, avoiding a separate deposit in every country of filing. India's Microbial Culture Collection (MCC/MTCC) type facilities and Indian applicants rely on this treaty when biological-material claims are involved.",
+    "source_url": "https://www.wipo.int/budapest/en/",
+    "source_name": "World Intellectual Property Organization (WIPO) – Budapest Treaty",
+    "last_verified": "2026-09-01",
+    "tags": [
+      "Budapest Treaty",
+      "micro-organism deposit",
+      "biological material patents"
+    ]
+  },
+  {
+    "id": "intl-who-traditional-medicine",
+    "jurisdiction": "International",
+    "regime": "market_access",
+    "title": "WHO Traditional Medicine Strategy & herbal-medicine monographs",
+    "instrument": "WHO Traditional Medicine Strategy 2014-2023 (and successor guidance) / WHO Monographs on Selected Medicinal Plants",
+    "citation": "Non-binding WHO guidance",
+    "instrument_type": "guidance",
+    "summary": "Not a treaty and not binding law, but influential soft-law guidance many national regulators reference when setting herbal/traditional-medicine quality, safety and registration standards. WHO's monographs provide internationally recognised quality/safety benchmarks for individual medicinal plants, which exporters can point to as supporting evidence (though never a substitute for the destination country's own regulatory approval).",
+    "source_url": "https://www.who.int/health-topics/traditional-complementary-and-integrative-medicine",
+    "source_name": "World Health Organization (WHO)",
+    "last_verified": "2026-09-01",
+    "tags": [
+      "WHO",
+      "soft law",
+      "quality standards",
+      "export evidence"
+    ]
+  },
+  {
+    "id": "intl-us-dshea",
+    "jurisdiction": "International",
+    "regime": "market_access",
+    "title": "United States – dietary supplement vs. botanical drug pathway",
+    "instrument": "Dietary Supplement Health and Education Act (DSHEA), 1994 / FDA Botanical Drug Development Guidance",
+    "citation": "21 U.S.C. §321(ff) (DSHEA); FDA Guidance for Industry: Botanical Drug Development",
+    "instrument_type": "regulation",
+    "summary": "An Ayurvedic product entering the US market almost always faces a first fork: marketed as a 'dietary supplement' under DSHEA (no pre-market FDA approval, but no disease-cure claims permitted, and the manufacturer is responsible for safety) versus pursuing FDA's botanical-drug pathway (full clinical evidence required, but disease claims and stronger IP/exclusivity become possible, mirroring India's classical-vs-new-drug distinction). Structure/function claims are allowed for supplements; therapeutic/disease claims require the drug pathway.",
+    "source_url": "https://www.fda.gov/regulatory-information/search-fda-guidance-documents/botanical-drug-development-guidance-industry",
+    "source_name": "U.S. Food and Drug Administration (FDA)",
+    "last_verified": "2026-09-01",
+    "tags": [
+      "USA",
+      "dietary supplement",
+      "botanical drug",
+      "market access"
+    ]
+  },
+  {
+    "id": "intl-eu-thmpd",
+    "jurisdiction": "International",
+    "regime": "market_access",
+    "title": "European Union – Traditional Herbal Medicinal Products Directive",
+    "instrument": "Directive 2004/24/EC amending Directive 2001/83/EC (Traditional Herbal Medicinal Products Directive, THMPD)",
+    "citation": "Directive 2004/24/EC",
+    "instrument_type": "regulation",
+    "summary": "Provides a simplified registration route in the EU for traditional herbal medicinal products (including Ayurvedic products) that have been in traditional medicinal use for at least 30 years (of which at least 15 years within the EU), without needing full clinical-trial data — in exchange, only traditional, non-serious indications applied without a doctor's supervision can be claimed. Products seeking broader therapeutic claims or lacking the traditional-use track record must go through the full medicinal-product authorisation route instead.",
+    "source_url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32004L0024",
+    "source_name": "EUR-Lex – Official Journal of the European Union",
+    "last_verified": "2026-09-01",
+    "tags": [
+      "EU",
+      "THMPD",
+      "traditional use registration",
+      "market access"
+    ]
+  },
+  {
+    "id": "intl-wipo-igc",
+    "jurisdiction": "International",
+    "regime": "treaty",
+    "title": "WIPO Intergovernmental Committee (IGC) on IP, Genetic Resources, TK and Folklore",
+    "instrument": "WIPO IGC negotiating process",
+    "citation": "Ongoing multilateral negotiation (background context)",
+    "instrument_type": "guidance",
+    "summary": "The standing WIPO forum where member states (India actively participating) have negotiated protection for genetic resources, traditional knowledge and traditional cultural expressions since 2000 — the 2024 WIPO GRATK Treaty (above) is the first binding instrument to emerge from this process, covering the disclosure piece; broader instruments on substantive TK/TCE protection are still under negotiation. Useful as background when a user asks 'is there a global TK protection treaty' — the honest answer as of this corpus's last verification is: a narrow disclosure treaty exists (2024); broader substantive protection is still being negotiated.",
+    "source_url": "https://www.wipo.int/tk/en/igc/",
+    "source_name": "World Intellectual Property Organization (WIPO) – IGC",
+    "last_verified": "2026-09-01",
+    "tags": [
+      "WIPO IGC",
+      "traditional knowledge",
+      "traditional cultural expressions",
+      "negotiation status"
+    ]
+  },
+  {
+    "id": "intl-paris-convention",
+    "jurisdiction": "International",
+    "regime": "treaty",
+    "title": "Paris Convention — the priority-right foundation under nearly every filing",
+    "instrument": "Paris Convention for the Protection of Industrial Property, 1883 (as revised)",
+    "citation": "Article 4 (priority); Article 2 (national treatment)",
+    "instrument_type": "treaty",
+    "summary": "The foundational treaty behind almost every other instrument in this corpus. Article 2 guarantees national treatment — a Union-country national gets the same protection and remedies as that country's own nationals, without having to be locally domiciled. Article 4 gives a 12-month priority period for patents and utility models, and a 6-month priority period for trademarks and industrial designs: filing first in India and then filing abroad within that window lets the later foreign filing be treated as if made on the original Indian filing date (for novelty purposes). Practical effect for an Ayurveda applicant: filing an Indian patent or trademark application first, then deciding on international filing (PCT / Madrid / national routes) within the Article 4 window, is what actually preserves priority — miss the window and the foreign filing is judged against everything published in the meantime, including your own Indian filing.",
+    "source_url": "https://www.wipo.int/wipolex/en/text/288514",
+    "source_name": "World Intellectual Property Organization (WIPO) — Paris Convention text",
+    "last_verified": "2026-09-06",
+    "tags": [
+      "Paris Convention",
+      "priority right",
+      "national treatment",
+      "filing strategy"
+    ],
+    "full_text_excerpt": "Article 4C(1): The periods of priority referred to above shall be twelve months for patents and utility models, and six months for industrial designs and trademarks."
+  },
+  {
+    "id": "intl-trips-art39-trade-secrets",
+    "jurisdiction": "International",
+    "regime": "treaty",
+    "title": "TRIPS — protection of undisclosed information (trade secrets)",
+    "instrument": "Agreement on Trade-Related Aspects of Intellectual Property Rights (TRIPS), 1995",
+    "citation": "Article 39",
+    "instrument_type": "treaty",
+    "summary": "Requires WTO members to protect undisclosed information against being disclosed, acquired or used by others without consent in a manner contrary to honest commercial practices, provided the information is secret, has commercial value because it is secret, and reasonable steps were taken to keep it secret. This is the international backbone for trade-secret protection of an Ayurvedic formulation's exact ratios/process where the formulation is deliberately kept undocumented rather than patented — a legitimate, durable strategy precisely for classical-adjacent formulations that would fail the Section 3(p)-type patentability bar anyway, provided real secrecy is actually maintained (a published or easily reverse-engineered formulation gets no protection under this route).",
+    "source_url": "https://www.wto.org/english/docs_e/legal_e/27-trips.pdf",
+    "source_name": "World Trade Organization – TRIPS Agreement text",
+    "last_verified": "2026-09-06",
+    "tags": [
+      "trade secrets",
+      "undisclosed information",
+      "TRIPS Article 39"
+    ]
+  },
+  {
+    "id": "intl-upov-convention",
+    "jurisdiction": "International",
+    "regime": "plant_variety",
+    "title": "UPOV Convention — international plant-variety protection (and why India stays outside it)",
+    "instrument": "International Convention for the Protection of New Varieties of Plants (UPOV), 1961/1991 Acts",
+    "citation": "UPOV 1991 Act",
+    "instrument_type": "treaty",
+    "summary": "UPOV members grant breeders' rights over new plant varieties on a largely harmonised, breeder-favouring model (the 1991 Act narrows the traditional farmers'-saved-seed exemption compared to earlier UPOV Acts). India deliberately did not join UPOV, choosing instead its own sui generis Protection of Plant Varieties and Farmers' Rights Act, 2001, specifically to preserve broader farmers' rights (to save, use, exchange and sell seed) than the 1991 UPOV Act would allow. For a medicinal-plant breeder, this means: protection registered in India under the PPV&FR Act does not automatically extend abroad, and a UPOV-member export market will apply its own UPOV-based variety-protection law, not India's, to any variety registration sought there.",
+    "source_url": "https://www.upov.int/",
+    "source_name": "International Union for the Protection of New Varieties of Plants (UPOV)",
+    "last_verified": "2026-09-06",
+    "tags": [
+      "UPOV",
+      "plant breeders rights",
+      "farmers rights",
+      "India not a member"
+    ]
+  },
+  {
+    "id": "intl-berne-convention",
+    "jurisdiction": "International",
+    "regime": "copyright",
+    "title": "Berne Convention — international copyright baseline",
+    "instrument": "Berne Convention for the Protection of Literary and Artistic Works, 1886 (as revised)",
+    "citation": "Articles 3, 5 & 7",
+    "instrument_type": "treaty",
+    "summary": "Sets the international floor for copyright: protection arises automatically on creation with no registration formality (Article 5(2)), a work by a national of any member country gets national treatment in every other member country (Articles 3 & 5(1)), and the minimum protection term is the author's life plus 50 years (Article 7) — India's own Copyright Act, 1957 already exceeds this floor at life plus 60 years. Relevant to Ayurveda businesses mainly for cross-border enforcement of copyright in packaging artwork, websites and original written materials; it does not extend copyright to formulations, methods, or public-domain classical texts in any member country, for the same reason it doesn't domestically.",
+    "source_url": "https://www.wipo.int/treaties/en/ip/berne/",
+    "source_name": "World Intellectual Property Organization (WIPO) — Berne Convention",
+    "last_verified": "2026-09-06",
+    "tags": [
+      "Berne Convention",
+      "copyright",
+      "national treatment",
+      "minimum term"
+    ]
+  },
+  {
+    "id": "intl-lisbon-geneva-act-gi",
+    "jurisdiction": "International",
+    "regime": "gi",
+    "title": "Lisbon System / Geneva Act (2015) — international GI registration (India not currently a member)",
+    "instrument": "Lisbon Agreement for the Protection of Appellations of Origin, 1958 / Geneva Act of the Lisbon Agreement, 2015",
+    "citation": "Geneva Act, 2015",
+    "instrument_type": "treaty",
+    "summary": "A WIPO-administered system letting a single international registration protect an appellation of origin or geographical indication across all member states/regions — the GI equivalent of the Madrid (trademark) or Hague (design) systems. As of this corpus's last verification, India has not joined the Lisbon System (commentary has periodically debated whether India should) — membership skews toward the EU and a smaller group of other states. Practical effect: an Indian GI holder currently cannot use this route and must still pursue GI/appellation protection market-by-market abroad (where such protection exists at all) rather than through one WIPO filing; always re-check current membership before relying on this route for a specific export market.",
+    "source_url": "https://www.wipo.int/en/web/lisbon-system",
+    "source_name": "World Intellectual Property Organization (WIPO) — Lisbon System",
+    "last_verified": "2026-09-06",
+    "tags": [
+      "Lisbon Agreement",
+      "Geneva Act",
+      "international GI registration",
+      "India not a member"
+    ]
+  },
+  {
+    "id": "intl-australia-tga-listed-medicines",
+    "jurisdiction": "International",
+    "regime": "market_access",
+    "title": "Australia — TGA 'Listed' (AUST L) complementary medicines pathway",
+    "instrument": "Therapeutic Goods Act, 1989 (Cth) / Therapeutic Goods Administration (TGA) framework",
+    "citation": "Listed medicines (AUST L) vs Registered medicines (AUST R)",
+    "instrument_type": "regulation",
+    "summary": "Australia splits complementary/herbal medicines (including Ayurvedic products) into two tracks on the Australian Register of Therapeutic Goods (ARTG): 'Listed' (AUST L) products are self-certified by the sponsor against a permitted list of lower-risk ingredients and only general/traditional-use-level indications, with no pre-market efficacy assessment by the TGA (though subject to post-market compliance review and GMP licensing) — broadly mirroring India's classical/traditional-use posture; 'Registered' (AUST R) products need full quality, safety and efficacy evidence for stronger (including disease-related) claims, mirroring India's new/phytopharmaceutical drug route. Choosing the wrong track (an AUST L product carrying an implied disease claim) is a common compliance failure for herbal exporters into Australia.",
+    "source_url": "https://www.tga.gov.au/products/medicines/listed-medicines/overview/listed-complementary-medicines",
+    "source_name": "Australian Government — Therapeutic Goods Administration (TGA)",
+    "last_verified": "2026-09-06",
+    "tags": [
+      "Australia",
+      "TGA",
+      "AUST L",
+      "complementary medicines",
+      "market access"
+    ]
+  },
+  {
+    "id": "intl-health-canada-nhp",
+    "jurisdiction": "International",
+    "regime": "market_access",
+    "title": "Canada — Natural Health Products Regulations",
+    "instrument": "Natural Health Products Regulations (under the Food and Drugs Act, Canada)",
+    "citation": "Product licensing requirement (Natural Product Number, NPN)",
+    "instrument_type": "regulation",
+    "summary": "Requires a pre-market product licence (evidenced by an 8-digit Natural Product Number, NPN, on the label) before a natural health product — including most Ayurvedic products — can be legally sold in Canada, based on evidence of safety and efficacy that can range from citing an accepted monograph/reference (for well-established traditional uses) up to full supporting studies for novel claims, plus a separate site licence for the manufacturer/importer. This sits regulatory-weight-wise between the US's no-pre-market-approval DSHEA supplement route and the EU's THMPD traditional-use registration — closer to the EU model in requiring pre-market sign-off, but organised around a distinct product database (the Licensed Natural Health Products Database) rather than a traditional-use time threshold.",
+    "source_url": "https://www.canada.ca/en/health-canada/services/drugs-health-products/natural-non-prescription/applications-submissions/product-licensing.html",
+    "source_name": "Health Canada",
+    "last_verified": "2026-09-06",
+    "tags": [
+      "Canada",
+      "Health Canada",
+      "Natural Health Products",
+      "NPN",
+      "market access"
+    ]
+  }
+]
