@@ -20,12 +20,19 @@ as a citation when it is retrieved.
   "source_name": "India Code (Ministry of Law & Justice)",
   "last_verified": "2026-09-01",       // date this MVP corpus entry was last checked against the source
   "tags": ["traditional knowledge", "novelty bar", "classical formulation"],
-  "full_text_excerpt": "..."           // OPTIONAL. Only present when the exact wording was fetched
+  "full_text_excerpt": "...",          // OPTIONAL. Only present when the exact wording was fetched
                                         // and confirmed against a primary/authoritative source in the
                                         // same session that added it -- never a reconstruction from
                                         // memory. If it can't be verified live, this field is omitted
                                         // rather than filled with an approximate quote. See "Verbatim
                                         // excerpts" below.
+  "review_status": "curated",          // OPTIONAL. Absent or "curated"/"verified" => hand-reviewed
+                                        // content (the default for every entry authored by hand).
+                                        // "unreviewed" => produced by the ingestion pipeline
+                                        // (scripts/ingest.py scaffold) and NOT yet checked by a human.
+  "provenance": { ... }                // OPTIONAL. Present on machine-scaffolded entries: how the
+                                        // entry was produced (source id, locator, fetch timestamp,
+                                        // parser, whether the summary is extractive or LLM-written).
 }
 ```
 
@@ -41,6 +48,30 @@ fetch would be exactly the kind of fabricated authority this project exists to a
 without this field should be read as "summarised, not literally quoted" rather than as missing
 data.
 
+## Ingestion pipeline (`scripts/ingest.py`)
+
+The corpus can be grown and maintained from the same open, authoritative sources it cites —
+see [`docs/SOURCES.md`](../docs/SOURCES.md) for the source registry and
+[`docs/ARCHITECTURE.md`](../docs/ARCHITECTURE.md)'s "Corpus ingestion & verification" section
+for the flow. Two operations:
+
+- **`scaffold`** turns a source id + a document locator into an entry and (with `--write`)
+  adds it to `india.json` / `international.json`, tagged `review_status: "unreviewed"`. The
+  machine fills `source_url`, `source_name`, `last_verified`, and best-effort
+  `title` / `summary` / `tags`; a human is expected to tighten these before the entry is
+  trusted. A `full_text_excerpt` is only written when the operative sentence for the cited
+  provision is found **literally** in the live fetch — the anti-fabrication rule above is
+  enforced by code, not just convention.
+- **`verify`** re-checks every entry's `source_url`: reachable? does any `full_text_excerpt`
+  still appear on the page? is `last_verified` within the staleness threshold? It writes a
+  report to `backend/data/ingest/verify_report.json` (served read-only at `GET /corpus/verify`)
+  and can exit non-zero in CI. `refresh-verified` bumps `last_verified` on entries that pass.
+
+Sources that cannot honestly be queried by a script — TKDL (shared with examiners under
+NDA) and the captcha-gated IP India search front-ends (InPASS, GI/TM/Design registers) — are
+marked `not_automatable`: `scaffold` refuses them and `verify` reports them as
+`unverifiable` rather than inventing a result.
+
 ## Notes on this MVP corpus
 
 - This is a **hand-curated corpus of 45 entries** (26 India + 19 international), not a complete legal
@@ -51,9 +82,11 @@ data.
 - Every entry carries a `source_url` pointing to an official or authoritative source so a user (or a
   reviewer) can always check the assistant's claim against the primary text — this is what "never
   fabricate authority" means operationally in this codebase.
-- `last_verified` is what lets the corpus be "version-tracked": a nightly/weekly job (not built in this
-  MVP) would re-check each `source_url` and flag entries whose `last_verified` date has drifted too far,
-  surfacing them for legal review before the assistant keeps citing them.
+- `last_verified` is what lets the corpus be "version-tracked": `scripts/ingest.py verify` re-checks
+  each `source_url` (reachability + `full_text_excerpt` drift + staleness against a threshold) and
+  writes a report; run it on a schedule / in CI (`--fail-on unreachable,excerpt_drift`) to surface
+  drifted entries for legal review before the assistant keeps citing them. A full legal-review
+  sign-off workflow on top of that report is still future work.
 - `graph_edges.json` alongside `india.json`/`international.json` is a separate, non-document file: it
   hand-authors the knowledge graph's institution links and document-to-document relations (regime,
   jurisdiction and formulation-category edges are auto-derived from these corpus files instead, so they

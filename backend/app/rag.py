@@ -36,6 +36,7 @@ def _to_citation(doc: Dict, score: float) -> Citation:
         last_verified=doc["last_verified"],
         score=round(score, 4),
         full_text_excerpt=doc.get("full_text_excerpt"),
+        review_status=doc.get("review_status"),
     )
 
 

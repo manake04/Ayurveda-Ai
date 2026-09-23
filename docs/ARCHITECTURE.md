@@ -128,6 +128,58 @@ canvas renderer -- deliberately not a charting library dependency, since the gra
 enough (a few hundred nodes/edges) that a plain O(n²) repulsion simulation is fast, and
 keeping it dependency-free keeps the visualisation fully auditable.
 
+## Corpus ingestion & verification (`app/ingest/`, `scripts/ingest.py`)
+
+The curated corpus is grown and maintained from the same open, authoritative public sources
+it cites. `app/ingest/` is a small, dependency-light package driven by the
+`scripts/ingest.py` CLI (alongside `build_index.py` / `build_graph.py`); two read-only
+endpoints (`GET /corpus/sources`, `GET /corpus/verify`) expose its state to the running
+backend without ever doing network I/O in a request.
+
+```
+                 scripts/ingest.py
+     ┌───────────────┬───────────────┬────────────────────┐
+   sources         verify          scaffold            refresh-verified
+     │               │               │                        │
+ sources.py     report.py ─┐   scaffold.py ─┐             writer.py
+ (registry)     verify.py  │   extract.py   │        (bump last_verified
+     │               │     │   fetch.py     │         on entries that pass)
+     │          fetch.py   │        │        │
+     │        (requests +  │   writer.py ────┘
+     │         disk cache) │   (upsert into corpus/*.json;
+     │               │     │    never clobbers a curated entry
+     ▼               ▼     ▼    without --force)
+  docs/SOURCES.md   data/ingest/verify_report.json  →  GET /corpus/verify
+```
+
+- **`sources.py`** — a registry of ~19 primary sources (India Code, e-Gazette, IP India,
+  NBA/ABS, CDSCO, FSSAI, DPIIT, WIPO, WTO, CBD, EUR-Lex, WHO, UPOV, …). Each says how to turn
+  a short locator into a canonical `source_url`, what `source_name` convention its entries
+  follow (kept consistent with the existing corpus so the two can't drift — enforced by
+  `tests/test_ingest.py`), and its `fetch_kind`: `html`, `pdf`, or `not_automatable`.
+- **`fetch.py`** — polite `requests` GETs (browser UA, timeout, retry) with a raw-response
+  disk cache under `backend/data/ingest/cache/`. `extract_text` uses BeautifulSoup / `pypdf`
+  from the optional `requirements-ingest.txt` extra when present, and falls back to a stdlib
+  `html.parser` tag-stripper (HTML) or "unparsed" (PDF) otherwise.
+- **`scaffold.py`** — fetches a source locator and builds a full corpus entry
+  (`corpus/SCHEMA.md` shape). Machine-filled fields are marked `review_status: "unreviewed"`
+  with a `provenance` block. A `full_text_excerpt` is included **only** when the operative
+  sentence for the cited provision is found literally in the fetched page — the same
+  anti-fabrication rule the hand-authored corpus follows, now enforced in code. If an API
+  key is configured the summary is LLM-written but strictly grounded in the fetched text
+  (same lazy-import + fallback pattern as `rag.py:_llm_answer`); otherwise it is extractive.
+  `scaffold` refuses a `not_automatable` source outright.
+- **`writer.py`** — merges scaffolded entries into `india.json` / `international.json` by
+  jurisdiction, dedupes by `id`, and **refuses to overwrite a hand-curated entry**
+  (`review_status` absent / `"curated"` / `"verified"`) unless `force=True`. After a write,
+  rerun `build_index.py` and `build_graph.py`.
+- **`verify.py` / `report.py`** — re-check every entry against its live `source_url`:
+  `ok` / `stale` (past the staleness threshold) / `excerpt_drift` (the `full_text_excerpt`
+  no longer appears) / `unreachable` (no 2xx, or a soft-404 body) / `unverifiable` (a PDF
+  with no parser, or a `not_automatable` source — never a false `ok`). The report is written
+  to `backend/data/ingest/verify_report.json`; `ingest.py verify --fail-on ...` exits
+  non-zero for CI, and `refresh-verified` bumps `last_verified` on the entries that pass.
+
 ## Why TF-IDF instead of a neural embedding model as the *default*
 
 See the docstring in `backend/app/vectorstore.py`. Short version: the corpus is small and

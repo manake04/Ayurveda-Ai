@@ -4,6 +4,7 @@ backend/__pycache__/
 backend/**/__pycache__/
 backend/.pytest_cache/
 backend/data/audit_log.jsonl
+backend/data/ingest/
 .env
 
 # Node

@@ -121,14 +121,22 @@ ip-sakti-sahayak-mvp/
 │   │   ├── embeddings.py       # optional dense multilingual embedding index
 │   │   ├── graph.py            # NetworkX + JSON knowledge graph
 │   │   ├── agent.py            # rule-based agentic planner (no LLM required)
-│   │   └── rag.py              # citation-grounded retrieval + answer synthesis
+│   │   ├── rag.py              # citation-grounded retrieval + answer synthesis
+│   │   └── ingest/             # corpus ingestion & verification pipeline
+│   │       ├── sources.py      # registry of authoritative public sources
+│   │       ├── fetch.py        # cached, polite fetch + HTML/PDF text extraction
+│   │       ├── scaffold.py     # source locator -> corpus entry (review_status=unreviewed)
+│   │       ├── writer.py       # merge into corpus/*.json (won't clobber curated entries)
+│   │       └── verify.py       # re-check each entry's source_url for drift
 │   ├── scripts/
 │   │   ├── build_index.py
 │   │   ├── build_graph.py
-│   │   └── build_dense_index.py   # optional
+│   │   ├── build_dense_index.py   # optional
+│   │   └── ingest.py           # sources / verify / scaffold / refresh-verified
 │   ├── requirements.txt
 │   ├── requirements-dense.txt  # optional extra, not installed by default
-│   ├── tests/                  # incl. test_graph.py, test_agent.py
+│   ├── requirements-ingest.txt # optional extra (HTML/PDF parsing), not installed by default
+│   ├── tests/                  # incl. test_graph.py, test_agent.py, test_ingest.py
 │   └── eval/                   # citation-correctness, safe-abstention & agentic-planning harness
 ├── frontend/                    # React + Vite + Tailwind UI
 │   └── src/
@@ -139,15 +147,41 @@ ip-sakti-sahayak-mvp/
 │           └── RelatedCitationCard.jsx  # graph-surfaced "also related" citations
 └── docs/
     ├── ARCHITECTURE.md
-    └── ROADMAP.md
+    ├── ROADMAP.md
+    └── SOURCES.md               # generated: the corpus source registry
 ```
+
+## Maintaining the corpus
+
+The corpus is grown and maintained from the same open, authoritative public sources it cites
+(TKDL, India Code, IP India, NBA/ABS, e-Gazette, WIPO, WTO, EUR-Lex, …). See
+[`docs/SOURCES.md`](docs/SOURCES.md) for the full registry.
+
+```bash
+cd backend
+pip install -r requirements-ingest.txt         # optional: HTML/PDF parsing (falls back to stdlib without it)
+
+python scripts/ingest.py sources               # list the source registry
+python scripts/ingest.py verify --stale-days 180   # re-check every entry's source_url; writes data/ingest/verify_report.json
+python scripts/ingest.py scaffold --source india-code --locator 123456789/1388 \
+    --regime patent --id in-patents-example --citation "Section 3(p)" --write
+python scripts/build_index.py && python scripts/build_graph.py   # rebuild after any --write
+```
+
+Scaffolded entries are tagged `review_status: "unreviewed"` and need a human to tighten the
+title/summary before they are trusted; a `full_text_excerpt` is only ever written when the
+exact wording is confirmed present in the live fetch. Sources that can't honestly be queried
+by a script (TKDL, the captcha-gated IP India search) are marked `not_automatable`. The
+verification report is also served read-only at `GET /corpus/verify`.
 
 ## Important caveats (read before a live demo)
 
 - The corpus is a **hand-curated set of 45 documents** (26 India + 19 international), not
   a complete legal database — see `corpus/SCHEMA.md` for what a production corpus would
-  need (full statutory text at scale, case law, a legal-review sign-off workflow,
-  automated `last_verified` drift checking). A subset of entries carry a verbatim
+  need (full statutory text at scale, case law, a legal-review sign-off workflow). Automated
+  `last_verified` drift checking now exists (`python scripts/ingest.py verify`, see
+  "Maintaining the corpus" above), but the legal-review sign-off on top of its report does
+  not. A subset of entries carry a verbatim
   `full_text_excerpt` that was live-fetched and confirmed during authoring — see
   `SCHEMA.md`'s anti-fabrication note on why that field is populated selectively rather
   than backfilled from training-data recall.

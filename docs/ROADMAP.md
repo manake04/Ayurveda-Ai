@@ -38,8 +38,15 @@ them.
       with real quoted key-section text (`full_text_excerpt`) added to select entries,
       always from a live-verified fetch in the same authoring session -- never
       backfilled from training-data recall (see `corpus/SCHEMA.md`'s anti-fabrication
-      note). A legal-review sign-off workflow and automated `last_verified` drift
-      checking against each `source_url` remain future work at larger scale.
+      note).
+- [x] Corpus ingestion & verification pipeline (`backend/app/ingest/`,
+      `backend/scripts/ingest.py`, `docs/SOURCES.md`): a registry of the authoritative
+      public sources; `scaffold` to build a corpus entry from a source locator (written
+      back tagged `review_status: "unreviewed"`, `full_text_excerpt` only on a verified
+      live match); and `verify` -- **automated `last_verified` drift checking against each
+      `source_url`** (reachability + excerpt-drift + staleness), with a report served at
+      `GET /corpus/verify` and a CI-friendly `--fail-on` exit code. A legal-review
+      sign-off workflow layered on top of that report remains future work.
 - [x] (Stretch, delivered ahead of Stage 4) Optional dense multilingual retrieval
       re-ranking (`requirements-dense.txt`, `scripts/build_dense_index.py`) -- an
       opt-in upgrade layered onto the existing `VectorStore` interface via Reciprocal
