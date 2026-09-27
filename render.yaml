@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: ip-sakti-sahayak-backend
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: >-
+      pip install -r requirements.txt &&
+      python scripts/build_index.py &&
+      python scripts/build_graph.py
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: CORS_ORIGINS
+        # Add your GitHub Pages URL here once you know it, e.g.
+        # https://<user>.github.io,https://<user>.github.io/Ayurveda-Ai
+        value: http://localhost:5173,http://127.0.0.1:5173
+      - key: CORPUS_DIR
+        value: ../corpus
+      - key: INDEX_DIR
+        value: ./data/index
+      - key: GRAPH_DIR
+        value: ./data/graph
+      - key: AUDIT_LOG_PATH
+        value: ./data/audit_log.jsonl

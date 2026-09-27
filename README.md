@@ -1,9 +1,16 @@
 # IP-SAKTI Sahayak
 
+[![CI](https://github.com/manake04/Ayurveda-Ai/actions/workflows/ci.yml/badge.svg)](https://github.com/manake04/Ayurveda-Ai/actions/workflows/ci.yml)
+[![Deploy frontend](https://github.com/manake04/Ayurveda-Ai/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/manake04/Ayurveda-Ai/actions/workflows/deploy-pages.yml)
+
 **A multilingual, RAG-based, source-cited AI assistant for Intellectual Property and
 regulatory guidance in Ayurveda — across national and international regimes.**
 
 Built for **Smart India Hackathon 2026 — Problem Statement ID 26045**.
+
+**Live demo:** https://manake04.github.io/Ayurveda-Ai/ (frontend, GitHub Pages) — talks to
+the backend deployed on Render. See [Deployment](#deployment) below for how both pieces are
+wired together and how to point the demo at your own backend.
 
 > This is Stage 1 (citation-grounded retrieval) **and** Stage 2 (knowledge graph +
 > agentic orchestration) of the problem statement's staged build: "a citation-grounded
@@ -179,6 +186,38 @@ correctness** (15/15), **100% safe abstention** (3/3), and on the agentic dimens
 **100% step-count accuracy** (2/2), **100% citation coverage** (2/2) and **100%
 full-abstention correctness** (1/1). See `docs/ROADMAP.md` for what's still needed to
 evaluate answer accuracy and multilingual quality at scale.
+
+## Deployment
+
+GitHub Actions runs two workflows (`.github/workflows/`):
+
+- **`ci.yml`** — on every push/PR to `main`: installs backend deps, builds the retrieval
+  index + knowledge graph, runs `pytest` and the eval harness; separately installs frontend
+  deps and runs `npm run build`. This is CI (verification), not hosting.
+- **`deploy-pages.yml`** — builds the frontend and publishes it to GitHub Pages on every push
+  to `main` that touches `frontend/`. GitHub Pages only serves static files, so this covers
+  the frontend only.
+
+The FastAPI backend needs an actual server process, which GitHub Actions runners don't
+provide long-term — it's deployed separately to Render's free tier using the
+[`render.yaml`](render.yaml) blueprint in this repo. One-time setup to reproduce or fork this:
+
+1. **Backend → Render:** on [render.com](https://render.com), "New +" → "Blueprint" → point
+   it at this repo. Render reads `render.yaml` and provisions the FastAPI service
+   automatically (installs deps, builds the index/graph, starts `uvicorn`). Copy the
+   resulting `https://<service>.onrender.com` URL.
+2. Update `render.yaml`'s `CORS_ORIGINS` (or set it directly in the Render dashboard) to
+   include your GitHub Pages origin, e.g. `https://<you>.github.io`.
+3. **Frontend → GitHub Pages:** in this repo's Settings → Pages, set Source to "GitHub
+   Actions" (one-time). In Settings → Secrets and variables → Actions → Variables, add
+   `VITE_API_BASE_URL` = your Render URL from step 1. Push to `main` (or re-run the
+   `Deploy frontend to GitHub Pages` workflow) — it rebuilds the frontend against that API
+   URL and publishes it.
+
+Note the free tiers of both services: Render's free web service spins down after inactivity
+(the first request after idling can take ~30-50s to cold-start), and GitHub Pages is static
+hosting with no backend of its own. Fine for a hackathon demo; call this out if judges hit a
+slow first load.
 
 ## License
 
