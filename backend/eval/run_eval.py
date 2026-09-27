@@ -118,6 +118,11 @@ def main():
         label = dimension_labels.get(dimension, dimension)
         print(f"{label + ':':<40} {n_correct}/{n_total} ({100 * n_correct / n_total:.0f}%)")
 
+    n_failed = sum(n_total - n_correct for n_correct, n_total in tallies.values())
+    if n_failed:
+        print(f"\n{n_failed} eval case(s) failed.")
+    return n_failed
+
 
 if __name__ == "__main__":
-    main()
+    sys.exit(1 if main() else 0)

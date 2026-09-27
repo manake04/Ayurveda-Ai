@@ -1,10 +1,23 @@
-name: CI
+name: CI/CD
 
+# One pipeline, not two: the frontend is built exactly once per run and that same
+# artifact is both the thing CI checks and the thing that gets deployed, instead of
+# building it twice under two separate workflows (as an earlier version of this did).
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch: # manual re-run from the Actions tab, e.g. after changing repo variables
+
+# Superseded runs on the same branch/PR are cancelled instead of queued, so a burst of
+# pushes doesn't pile up redundant runners.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   backend:
@@ -34,7 +47,20 @@ jobs:
         run: python -m pytest tests/ -v
 
       - name: Run eval harness
-        run: python eval/run_eval.py
+        # Exit code reflects pass/fail (see backend/eval/run_eval.py) -- a citation or
+        # abstention regression fails the build, it doesn't just print red text nobody
+        # reads. Output is duplicated into the run's job summary either way.
+        run: python eval/run_eval.py | tee /tmp/eval_output.txt
+
+      - name: Publish eval results to job summary
+        if: always()
+        run: |
+          {
+            echo "### Eval harness results"
+            echo '```'
+            sed -n '/--- Summary ---/,$p' /tmp/eval_output.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
 
   frontend:
     runs-on: ubuntu-latest
@@ -54,4 +80,59 @@ jobs:
         run: npm ci
 
       - name: Build
+        env:
+          VITE_BASE_PATH: /${{ github.event.repository.name }}/
+          # Set repo variable VITE_API_BASE_URL to your deployed backend's public URL
+          # (Settings -> Secrets and variables -> Actions -> Variables) so the live demo
+          # can actually reach the API. Falls back to localhost if unset.
+          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
         run: npm run build
+
+      - name: Bundle size to job summary
+        if: always()
+        run: |
+          {
+            echo "### Frontend bundle"
+            echo '```'
+            du -ah dist | sort -k2
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # Uploaded on every run (PRs included) so a broken build is visible in the Actions
+      # tab; only actually deployed by the job below, and only on a push to main.
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend/dist
+
+  deploy:
+    needs: [backend, frontend]
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: true
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true # turns on Pages (Actions source) on first run if not set yet
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Deploy summary
+        run: |
+          {
+            echo "### Live demo"
+            echo "Frontend: ${{ steps.deployment.outputs.page_url }}"
+            echo ""
+            echo "Backend must be deployed separately (Render free tier via render.yaml) --"
+            echo "see the README's Deployment section. If VITE_API_BASE_URL isn't set as a"
+            echo "repo variable, the deployed frontend falls back to localhost and won't"
+            echo "reach a live backend."
+          } >> "$GITHUB_STEP_SUMMARY"

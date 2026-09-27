@@ -1,7 +1,6 @@
 # IP-SAKTI Sahayak
 
-[![CI](https://github.com/manake04/Ayurveda-Ai/actions/workflows/ci.yml/badge.svg)](https://github.com/manake04/Ayurveda-Ai/actions/workflows/ci.yml)
-[![Deploy frontend](https://github.com/manake04/Ayurveda-Ai/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/manake04/Ayurveda-Ai/actions/workflows/deploy-pages.yml)
+[![CI/CD](https://github.com/manake04/Ayurveda-Ai/actions/workflows/ci.yml/badge.svg)](https://github.com/manake04/Ayurveda-Ai/actions/workflows/ci.yml)
 
 **A multilingual, RAG-based, source-cited AI assistant for Intellectual Property and
 regulatory guidance in Ayurveda — across national and international regimes.**
@@ -189,14 +188,23 @@ evaluate answer accuracy and multilingual quality at scale.
 
 ## Deployment
 
-GitHub Actions runs two workflows (`.github/workflows/`):
+A single GitHub Actions pipeline (`.github/workflows/ci.yml`, workflow name "CI/CD") handles
+both verification and the frontend deploy, as three jobs in one run:
 
-- **`ci.yml`** — on every push/PR to `main`: installs backend deps, builds the retrieval
-  index + knowledge graph, runs `pytest` and the eval harness; separately installs frontend
-  deps and runs `npm run build`. This is CI (verification), not hosting.
-- **`deploy-pages.yml`** — builds the frontend and publishes it to GitHub Pages on every push
-  to `main` that touches `frontend/`. GitHub Pages only serves static files, so this covers
-  the frontend only.
+- **`backend`** — installs deps, builds the retrieval index + knowledge graph, runs
+  `pytest` and the eval harness. The eval harness's exit code now actually reflects
+  pass/fail (a prior version always exited 0, so a citation/abstention regression could
+  silently pass CI) and its results table is written to the run's job summary.
+- **`frontend`** — installs deps and runs `npm run build` **once**, with the GitHub Pages
+  base path and `VITE_API_BASE_URL` baked in; the built `dist/` is uploaded as a Pages
+  artifact on every run (PRs included, so a broken build is visible before merge), and
+  its size is written to the job summary.
+- **`deploy`** — only on a push to `main` (never on PRs), publishes the artifact `frontend`
+  already built to GitHub Pages. It doesn't rebuild anything — reusing that one build is
+  what keeps this to a single `npm ci`/`npm run build` per run instead of two.
+
+Runs on `main`/PRs auto-cancel a superseded run of themselves (`concurrency:`), so a quick
+burst of pushes doesn't queue up redundant runners.
 
 The FastAPI backend needs an actual server process, which GitHub Actions runners don't
 provide long-term — it's deployed separately to Render's free tier using the
@@ -209,10 +217,11 @@ provide long-term — it's deployed separately to Render's free tier using the
 2. Update `render.yaml`'s `CORS_ORIGINS` (or set it directly in the Render dashboard) to
    include your GitHub Pages origin, e.g. `https://<you>.github.io`.
 3. **Frontend → GitHub Pages:** in this repo's Settings → Pages, set Source to "GitHub
-   Actions" (one-time). In Settings → Secrets and variables → Actions → Variables, add
-   `VITE_API_BASE_URL` = your Render URL from step 1. Push to `main` (or re-run the
-   `Deploy frontend to GitHub Pages` workflow) — it rebuilds the frontend against that API
-   URL and publishes it.
+   Actions" (one-time — the pipeline's `deploy` job also passes `enablement: true`, which
+   turns this on automatically on its first successful run if you skip the manual step).
+   In Settings → Secrets and variables → Actions → Variables, add `VITE_API_BASE_URL` =
+   your Render URL from step 1, then push to `main` (or re-run the workflow from the
+   Actions tab) so the frontend rebuilds against that API URL and republishes.
 
 Note the free tiers of both services: Render's free web service spins down after inactivity
 (the first request after idling can take ~30-50s to cold-start), and GitHub Pages is static
