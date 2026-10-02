@@ -19,6 +19,7 @@ class Citation(BaseModel):
     last_verified: str
     score: float
     full_text_excerpt: Optional[str] = None
+    review_status: Optional[str] = None  # None/"curated" = hand-reviewed; "unreviewed" = machine-scaffolded
 
 
 class RelatedCitation(Citation):
@@ -166,3 +167,33 @@ class GraphPathResponse(BaseModel):
     target: str
     path: Optional[List[GraphRelatedNode]] = None
     found: bool
+
+
+class SourceInfo(BaseModel):
+    id: str
+    name: str
+    display_name: str
+    jurisdiction: str
+    homepage: str
+    fetch_kind: str
+    automatable: bool
+    locator_help: str
+    access_notes: str = ""
+
+
+class CorpusVerifyEntry(BaseModel):
+    id: str
+    status: str
+    source_url: str
+    last_verified: str
+    staleness_days: Optional[int] = None
+    checks: dict = Field(default_factory=dict)
+    detail: str = ""
+
+
+class CorpusVerifyReportResponse(BaseModel):
+    generated_at: str
+    stale_days: int
+    total: int
+    counts: dict
+    results: List[CorpusVerifyEntry]

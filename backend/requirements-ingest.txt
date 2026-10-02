@@ -1,0 +1,11 @@
+# Optional extra for the corpus ingestion / verification pipeline
+# (scripts/ingest.py). NOT needed to run the app, the tests, or the eval harness.
+#
+#   pip install -r requirements-ingest.txt
+#
+# Without these, scripts/ingest.py still runs: HTML falls back to a stdlib
+# tag-stripper and PDF body text is unavailable (PDF-backed entries then verify
+# by reachability only).
+
+beautifulsoup4==4.12.3
+pypdf==5.0.1

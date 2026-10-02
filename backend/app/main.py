@@ -1,4 +1,6 @@
 """FastAPI app for IP-SAKTI Sahayak."""
+import json
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -19,10 +21,13 @@ from app.models import (
     ClassifyResponse,
     ConnectorConsentRequest,
     ConnectorConsentResponse,
+    CorpusVerifyReportResponse,
     GraphExportResponse,
     GraphPathResponse,
     GraphRelatedResponse,
+    SourceInfo,
 )
+from app.ingest.sources import SOURCE_REGISTRY
 from app.rag import ask as rag_ask
 from app.tkdl import build_pointer
 from app.vectorstore import get_store
@@ -66,6 +71,40 @@ def corpus_stats():
         "by_jurisdiction": by_jurisdiction,
         "by_regime": by_regime,
     }
+
+
+@app.get("/corpus/sources", response_model=list[SourceInfo])
+def corpus_sources():
+    """The registry of authoritative public sources the corpus is assembled from
+    (see app/ingest/sources.py and scripts/ingest.py)."""
+    return [
+        SourceInfo(
+            id=s.id,
+            name=s.name,
+            display_name=s.display_name,
+            jurisdiction=s.jurisdiction,
+            homepage=s.homepage,
+            fetch_kind=s.fetch_kind,
+            automatable=s.automatable,
+            locator_help=s.locator_help,
+            access_notes=s.access_notes,
+        )
+        for s in SOURCE_REGISTRY.values()
+    ]
+
+
+@app.get("/corpus/verify", response_model=CorpusVerifyReportResponse)
+def corpus_verify():
+    """The most recent corpus-verification report. Read-only and offline — it never
+    hits the network from a request. Run `python scripts/ingest.py verify` to refresh it."""
+    path = config.VERIFY_REPORT_PATH
+    if not path.exists():
+        raise HTTPException(
+            status_code=503,
+            detail="No verification report yet. Run: cd backend && python scripts/ingest.py verify",
+        )
+    audit.log_event(endpoint="/corpus/verify", summary=f"served report from {path.name}")
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 @app.get("/i18n/{language}")

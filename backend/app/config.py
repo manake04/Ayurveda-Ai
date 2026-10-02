@@ -13,6 +13,8 @@ AUDIT_LOG_PATH = (BACKEND_DIR / os.getenv("AUDIT_LOG_PATH", "./data/audit_log.js
 GRAPH_EDGES_PATH = (CORPUS_DIR / "graph_edges.json").resolve()
 GRAPH_DIR = (BACKEND_DIR / os.getenv("GRAPH_DIR", "./data/graph")).resolve()
 DENSE_DIR = (BACKEND_DIR / os.getenv("DENSE_DIR", "./data/dense")).resolve()
+INGEST_DIR = (BACKEND_DIR / os.getenv("INGEST_DIR", "./data/ingest")).resolve()
+VERIFY_REPORT_PATH = INGEST_DIR / "verify_report.json"
 
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "").strip()
 ANTHROPIC_MODEL = os.getenv("ANTHROPIC_MODEL", "claude-sonnet-4-5").strip()
