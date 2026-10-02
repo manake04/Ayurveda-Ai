@@ -1,128 +1,91 @@
-#!/usr/bin/env python
-"""Evaluation harness for IP-SAKTI Sahayak's retrieval/citation/abstention quality.
+"""Retrieval quality and abstention eval, plus latency.
 
-Checks the things the problem statement calls out as evaluable:
-  1. Citation correctness -- does the top retrieved citation match what we expect?
-  2. Safe abstention -- does the assistant correctly decline out-of-scope queries?
-  3. (v2) For "mode": "agentic" cases -- does the rule-based planner decompose a compound,
-     multi-jurisdiction/multi-regime question into the expected number of steps, and does
-     the union of citations across all its sections still contain what we expect? Agentic
-     abstention means *every* planned section abstained (a fully out-of-scope compound
-     question), not just one.
-  4. (Answer accuracy and multilingual quality are noted as TODOs -- see docs/ROADMAP.md;
-     they need either human graders or a larger gold set than an MVP ships with.)
+    python -m eval.run_eval              # uses the models configured in .env
+    python -m eval.run_eval --llm        # also generate answers and check their [n] citations
 
-Usage:
-    cd backend && python eval/run_eval.py
+Exits non-zero if any case fails, so it can gate CI or a model change. It also prints the
+score range of answerable vs. off-topic questions and a suggested abstention threshold,
+since those thresholds are specific to each embedding model.
 """
+
+import argparse
+import asyncio
 import json
+import statistics
 import sys
+import time
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from app.core.config import get_settings
+from app.core.container import Container
+from app.schemas.ask import AskRequest
 
-from app import config  # noqa: E402
-from app.agent import run_agentic  # noqa: E402
-from app.graph import GraphStore  # noqa: E402
-from app.rag import answer_for_jurisdiction  # noqa: E402
-from app.vectorstore import VectorStore  # noqa: E402
+EVAL_SET = Path(__file__).resolve().parent / "eval_set.jsonl"
 
 
-def _run_standard_case(store, case) -> tuple[bool, str]:
-    result = answer_for_jurisdiction(store, case["query"], case["jurisdiction"], config.TOP_K)
-    got_ids = {c.id for c in result.citations}
+async def main(with_llm: bool) -> int:
+    settings = get_settings()
+    if not with_llm:
+        settings = settings.model_copy(update={"llm_provider": "none", "answer_cache_size": 0})
+    c = await Container.create(settings)
+    cases = [json.loads(line) for line in EVAL_SET.read_text(encoding="utf-8").splitlines() if line.strip()]
 
-    if case["expect_abstain"]:
-        ok = result.abstained
-        detail = f"abstained={result.abstained} confidence={result.confidence}"
-    else:
-        expected = set(case["expected_citation_ids"])
-        ok = bool(expected & got_ids)
-        detail = f"expected one of {expected}, got {got_ids or '{}'}"
-    return ok, detail
-
-
-def _run_agentic_case(store, graph_store, case) -> list[tuple[bool, str]]:
-    """An agentic case can check several things at once (step count, citation coverage,
-    full-abstention) -- each becomes its own (ok, detail) result so the summary counts
-    stay meaningful per-dimension rather than collapsing into one pass/fail."""
-    result = run_agentic(store, graph_store, case["query"], case["jurisdiction"], config.TOP_K)
-    got_ids = {c.id for section in result.sections for c in section.citations}
-    all_abstained = all(section.abstained for section in result.sections)
-    results = []
-
-    if "min_steps" in case or "max_steps" in case:
-        lo = case.get("min_steps", 0)
-        hi = case.get("max_steps", float("inf"))
-        ok = lo <= len(result.steps) <= hi
-        results.append(("steps", ok, f"{len(result.steps)} step(s) (expected {lo}-{hi})"))
-
-    if case.get("expect_abstain"):
-        results.append(("abstain", all_abstained, f"all_sections_abstained={all_abstained}"))
-    elif "expect_all_of" in case:
-        expected_all = set(case["expect_all_of"])
-        ok = expected_all.issubset(got_ids)
-        results.append(("citation", ok, f"expected ALL of {expected_all}, got {got_ids or '{}'}"))
-    elif "expected_citation_ids" in case:
-        expected = set(case["expected_citation_ids"])
-        ok = bool(expected & got_ids)
-        results.append(("citation", ok, f"expected one of {expected}, got {got_ids or '{}'}"))
-
-    return results
-
-
-def main():
-    store = VectorStore()
-    store.build(config.CORPUS_DIR, config.INDEX_DIR)
-
-    graph_store = GraphStore()
-    try:
-        graph_store.load(config.GRAPH_DIR)
-    except FileNotFoundError:
-        graph_store.build(config.CORPUS_DIR, config.GRAPH_EDGES_PATH, config.GRAPH_DIR)
-
-    eval_path = Path(__file__).resolve().parent / "eval_set.jsonl"
-    cases = [json.loads(line) for line in eval_path.read_text(encoding="utf-8").splitlines() if line.strip()]
-
-    tallies = {}  # dimension -> [n_correct, n_total]
-
-    def record(dimension, ok):
-        n_correct, n_total = tallies.get(dimension, [0, 0])
-        tallies[dimension] = [n_correct + int(ok), n_total + 1]
-
-    print(f"Running {len(cases)} eval cases...\n")
+    failures, hit1, hitk, latencies = 0, 0, 0, []
+    pos_scores, neg_scores = [], []
     for case in cases:
-        mode = case.get("mode", "standard")
-        label = "agentic" if mode == "agentic" else ("abstain" if case.get("expect_abstain") else "citation")
+        jur = case["jurisdiction"]
+        t = time.perf_counter()
+        result = (await c.retriever.retrieve(case["query"], [jur]))[jur]
+        latencies.append((time.perf_counter() - t) * 1000)
+        ids = [d["id"] for d, _ in result.hits]
+        top = result.hits[0][1] if result.hits else float("-inf")
 
-        if mode == "agentic":
-            for dimension, ok, detail in _run_agentic_case(store, graph_store, case):
-                status = "PASS" if ok else "FAIL"
-                print(f"[{status}] (agentic/{dimension}) '{case['query'][:60]}' -> {detail}")
-                record(f"agentic_{dimension}", ok)
+        if case["expect_abstain"]:
+            neg_scores.append(top)
+            ok = result.abstained
+            detail = f"abstained={ok} top={top:.3f}"
         else:
-            ok, detail = _run_standard_case(store, case)
-            status = "PASS" if ok else "FAIL"
-            print(f"[{status}] ({label}) '{case['query'][:60]}' -> {detail}")
-            record(label, ok)
+            pos_scores.append(top)
+            expected = set(case["expected_citation_ids"])
+            hit1 += bool(ids[:1] and ids[0] in expected)
+            hitk += bool(expected & set(ids))
+            ok = bool(expected & set(ids)) and not result.abstained
+            detail = f"top={ids[:1]} ({top:.3f}) expected one of {sorted(expected)}"
+            if ok and with_llm:
+                answer = (await c.pipeline.answer(AskRequest(query=case["query"], jurisdiction=jur))).answers[
+                    0
+                ]
+                cited = {cit.id for cit in answer.citations if f"[{cit.ref}]" in answer.answer}
+                ok = bool(expected & cited)
+                detail += f" | answer cites {sorted(cited)} via {answer.generated_by}"
+        failures += not ok
+        print(f"[{'PASS' if ok else 'FAIL'}] {case['query'][:60]:60} {detail}")
 
+    n_pos = len(pos_scores)
     print("\n--- Summary ---")
-    dimension_labels = {
-        "citation": "Citation correctness",
-        "abstain": "Safe abstention",
-        "agentic_steps": "Agentic step-count accuracy",
-        "agentic_citation": "Agentic citation coverage",
-        "agentic_abstain": "Agentic full-abstention correctness",
-    }
-    for dimension, (n_correct, n_total) in tallies.items():
-        label = dimension_labels.get(dimension, dimension)
-        print(f"{label + ':':<40} {n_correct}/{n_total} ({100 * n_correct / n_total:.0f}%)")
-
-    n_failed = sum(n_total - n_correct for n_correct, n_total in tallies.values())
-    if n_failed:
-        print(f"\n{n_failed} eval case(s) failed.")
-    return n_failed
+    print(
+        f"Models:            embeddings={c.retriever.embedder.name} reranker={settings.reranker_model or 'off'}"
+    )
+    print(f"Top-1 accuracy:    {hit1}/{n_pos}")
+    print(f"Top-{settings.top_k} recall:     {hitk}/{n_pos}")
+    print(
+        f"Abstention:        {sum(1 for s in neg_scores if s < (settings.rerank_confidence_abstain if settings.reranker_model else settings.confidence_abstain))}/{len(neg_scores)} off-topic questions declined"
+    )
+    print(
+        f"Score ranges:      answerable min {min(pos_scores):.3f} / median {statistics.median(pos_scores):.3f}; off-topic max {max(neg_scores):.3f}"
+    )
+    if min(pos_scores) > max(neg_scores):
+        print(f"Suggested abstain threshold: {(min(pos_scores) + max(neg_scores)) / 2:.3f}")
+    else:
+        print("Warning: answerable and off-topic score ranges overlap.")
+    print(f"Retrieval latency: median {statistics.median(latencies):.0f} ms, max {max(latencies):.0f} ms")
+    print(f"\n{failures} failure(s)")
+    await c.close()
+    return failures
 
 
 if __name__ == "__main__":
-    sys.exit(1 if main() else 0)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--llm", action="store_true", help="also generate and check answers")
+    args = parser.parse_args()
+    sys.exit(1 if asyncio.run(main(args.llm)) else 0)

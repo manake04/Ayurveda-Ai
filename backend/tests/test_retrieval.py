@@ -1,44 +1,57 @@
-import pytest
-
-from app import config
-from app.vectorstore import VectorStore
-
-
-@pytest.fixture(scope="module")
-def store():
-    s = VectorStore()
-    s.build(config.CORPUS_DIR, config.INDEX_DIR)
-    return s
+from app.retrieval.corpus import corpus_fingerprint, document_text
+from app.retrieval.vector_store import VectorStore, load_or_build
+from tests.conftest import FakeEmbedder
 
 
-def test_index_builds_full_corpus(store):
-    assert len(store.docs) >= 25
+async def test_retrieve_finds_the_relevant_document(retriever):
+    result = (await retriever.retrieve("traditional knowledge bar on patentability section 3(p)", ["india"]))[
+        "india"
+    ]
+    assert result.hits[0][0]["id"] == "in-patents-3p"
+    assert not result.abstained
 
 
-def test_section_3p_query_retrieves_section_3p(store):
-    hits = store.search("Can a classical Ayurvedic formulation be patented in India?", top_k=3, jurisdiction="india")
-    ids = [doc["id"] for doc, _ in hits]
-    assert "in-patents-3p" in ids
+async def test_jurisdictions_are_kept_separate(retriever):
+    results = await retriever.retrieve("patent filing", ["india", "international"])
+    assert all(d["jurisdiction"] == "India" for d, _ in results["india"].hits)
+    assert all(d["jurisdiction"] == "International" for d, _ in results["international"].hits)
 
 
-def test_jurisdiction_filter_india_excludes_international(store):
-    hits = store.search("traditional knowledge disclosure requirement", top_k=10, jurisdiction="india")
-    for doc, _ in hits:
-        assert doc["jurisdiction"] == "India"
+async def test_off_topic_question_abstains(retriever):
+    result = (await retriever.retrieve("zzqx blorf wibble", ["india"]))["india"]
+    assert result.abstained and result.confidence == "low"
 
 
-def test_jurisdiction_filter_international_excludes_india(store):
-    hits = store.search("traditional knowledge disclosure requirement", top_k=10, jurisdiction="international")
-    for doc, _ in hits:
-        assert doc["jurisdiction"] == "International"
+async def test_hits_are_capped_at_top_k(retriever, settings):
+    result = (await retriever.retrieve("patent trademark design copyright", ["india"]))["india"]
+    assert len(result.hits) == settings.top_k
 
 
-def test_wipo_gratk_query_retrieves_correct_doc(store):
-    hits = store.search("WIPO treaty genetic resources disclosure 2024", top_k=3, jurisdiction="international")
-    ids = [doc["id"] for doc, _ in hits]
-    assert "intl-wipo-gratk-treaty-2024" in ids
+async def test_reranker_reorders_hits(settings, store, embedder):
+    from app.retrieval.retriever import Retriever
+
+    class ReverseAlphabetical:
+        def score(self, query, texts):
+            return [float(-i) for i, _ in enumerate(sorted(texts, reverse=True))]
+
+    r = Retriever(settings, store, embedder, ReverseAlphabetical())
+    result = (await r.retrieve("patent", ["india"]))["india"]
+    scores = [s for _, s in result.hits]
+    assert scores == sorted(scores, reverse=True)
 
 
-def test_nonsense_query_gets_low_scores(store):
-    hits = store.search("best pizza toppings for a birthday party", top_k=3, jurisdiction="both")
-    assert hits[0][1] < config.CONFIDENCE_MEDIUM_THRESHOLD
+async def test_index_round_trips_and_detects_staleness(tmp_path, docs):
+    embedder = FakeEmbedder()
+    built = await load_or_build(tmp_path, docs, embedder)
+    loaded = VectorStore.load(tmp_path, docs, embedder.name)
+    assert loaded is not None and [d["id"] for d in loaded.docs] == [d["id"] for d in built.docs]
+
+    assert VectorStore.load(tmp_path, docs, "other:model") is None
+    changed = [dict(docs[0], summary="edited"), *docs[1:]]
+    assert corpus_fingerprint(changed) != corpus_fingerprint(docs)
+    assert VectorStore.load(tmp_path, changed, embedder.name) is None
+
+
+def test_document_text_includes_citation_and_tags(docs):
+    text = document_text(docs[0])
+    assert docs[0]["citation"] in text and docs[0]["tags"][0] in text

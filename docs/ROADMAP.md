@@ -47,40 +47,34 @@ them.
       This narrows (but doesn't replace) the multilingual retrieval gap Stage 4 below
       still needs to close for languages TF-IDF handles poorly.
 
-## Stage 3 -- Paid-source connectors
-- Real integrations behind the existing consent pattern (`connectors.py`) for the user's
-  own subscriptions (e.g. Manupatra, SCC Online, or an international patent-law database),
-  gated by the same explicit-and-logged permission flow already built.
-- Move the audit log from a local JSONL file to a proper encrypted, retention-limited
-  store, with a data-subject access/delete flow aligned to the DPDP Act.
+## Stage 2.5 -- Generative answers and semantic retrieval (this branch)
+- [x] Replaced TF-IDF with dense embeddings (`embeddinggemma` via Ollama, or Gemini
+      embeddings when hosted) and a FAISS index that rebuilds itself when the corpus or
+      model changes.
+- [x] Gemini answer generation, streamed to the UI, with citation numbers checked against
+      the retrieved sources. A local Ollama model can be swapped in with one setting.
+- [x] Hindi questions answered in Hindi (multilingual embeddings + language-aware prompt).
+- [x] Removed scaffolding that wasn't doing real work: the rule-based agentic planner (the
+      India/International/Both split covers its main use), the paid-connector consent
+      stub, the Bhashini translation stub and the local audit-log file.
+- [x] Rebuilt the frontend: streaming chat with inline citation chips, light/dark themes,
+      English/Hindi UI, mobile layout.
 
-## Stage 4 -- Full multilingual & voice experience
-- Stage 2 already delivered an *optional* dense multilingual retrieval re-ranker
-  (`paraphrase-multilingual-MiniLM-L12-v2` via `requirements-dense.txt`) as a stretch
-  goal -- but it re-ranks TF-IDF's own English-lexical candidate pool, so a query typed
-  entirely in Hindi still depends on TF-IDF having found reasonable candidates first.
-  Fully closing the gap means either replacing (not just re-ranking) the candidate
-  generation step with the multilingual encoder for non-English queries, or a
-  Bhashini-integrated embedding purpose-built for Indian languages.
-- Wire up `translate_via_bhashini` for real (pipeline id/credentials), and extend the
-  corpus's citation summaries to ship pre-translated or live-translated into Indian
-  languages (Hindi, and others via Bhashini's language set).
-- Add voice input/output via Bhashini's ASR/TTS pipelines.
+## Stage 3 -- Paid-source connectors
+- Real integrations for the user's own subscriptions (e.g. Manupatra, SCC Online), gated
+  behind explicit, logged consent.
+- An audit log in a proper store (encrypted, retention-limited), with a data-subject
+  access/delete flow aligned to the DPDP Act.
+
+## Stage 4 -- More languages and voice
+- Extend beyond Hindi via Bhashini (translation for the UI and source summaries).
+- Voice input/output via Bhashini's ASR/TTS pipelines.
+- A parallel multilingual gold set in the eval.
 
 ## Evaluation, ongoing
-The problem statement calls out four evaluable dimensions; this MVP covers the first two
-end-to-end (now including agentic-mode planning) and stubs the other two:
-- **Citation correctness** -- `backend/eval/run_eval.py` checks retrieved citations
-  against a hand-labelled expected set (100% on the current 15-case standard-mode gold
-  set).
-- **Safe abstention** -- same harness, checked against 3 clearly out-of-scope queries
-  (100% on the current set), plus a dedicated agentic-mode case checking that a fully
-  out-of-scope *compound* question causes every planned section to abstain (100%).
-- **Agentic planning quality** (v2 addition) -- two more eval dimensions specific to
-  `/ask/agentic`: step-count accuracy (does the planner decompose a compound question into
-  the expected number of steps, and *not* over-decompose a simple one?) and citation
-  coverage across all planned sections (100% on both, on the current 2-case set).
-- **Answer accuracy** -- needs either human legal review of generated answers or a much
-  larger gold Q&A set with reference answers; out of scope for an MVP eval harness.
-- **Multilingual quality** -- meaningful only once Stage 4's multilingual retrieval and
-  Bhashini integration exist; track it with a parallel gold set once that lands.
+- **Citation correctness and safe abstention:** `make eval`, 35 cases including Hindi
+  questions and off-topic questions in both languages.
+- **Generated-answer citations:** `python -m eval.run_eval --llm` checks that the answer
+  actually cites an expected source.
+- **Answer accuracy:** needs legal review of generated answers or a larger gold set with
+  reference answers.

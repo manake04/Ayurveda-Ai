@@ -16,6 +16,20 @@
 {"query": "What is the best recipe for a birthday cake?", "jurisdiction": "india", "expect_abstain": true, "expected_citation_ids": []}
 {"query": "Should I invest my savings in cryptocurrency this year?", "jurisdiction": "international", "expect_abstain": true, "expected_citation_ids": []}
 {"query": "What is the weather forecast for Mumbai tomorrow?", "jurisdiction": "india", "expect_abstain": true, "expected_citation_ids": []}
-{"query": "I want to patent a new Ayurvedic formulation and also register its brand name, in both India and abroad", "jurisdiction": "both", "mode": "agentic", "min_steps": 3, "max_steps": 3, "expect_all_of": ["in-trademarks-act-1999", "intl-madrid-system"]}
-{"query": "What is the best recipe for a birthday cake and what is the weather in Mumbai?", "jurisdiction": "both", "mode": "agentic", "expect_abstain": true}
-{"query": "What changed in the Patents Amendment Rules 2024 for request for examination timelines?", "jurisdiction": "india", "mode": "agentic", "min_steps": 1, "max_steps": 1, "expected_citation_ids": ["in-patents-amendment-rules-2024"]}
+{"query": "My competitor copied my herbal oil's brand name and packaging look. What can I do?", "jurisdiction": "india", "expect_abstain": false, "expected_citation_ids": ["in-trademarks-infringement-passing-off", "in-designs-piracy"]}
+{"query": "Someone got a patent on turmeric wound healing which is ancient knowledge. How do I get it cancelled?", "jurisdiction": "india", "expect_abstain": false, "expected_citation_ids": ["in-patents-opposition-revocation", "in-tkdl"]}
+{"query": "Can I get a patent on a new medicinal plant variety I bred?", "jurisdiction": "india", "expect_abstain": false, "expected_citation_ids": ["in-patents-3j", "in-ppvfr-act-2001"]}
+{"query": "What must be printed on the label of a packaged Ayurvedic product sold in shops?", "jurisdiction": "india", "expect_abstain": false, "expected_citation_ids": ["in-legal-metrology-packaged-commodities-rules-2011"]}
+{"query": "An influencer is advertising my rival's kadha as a COVID cure. Who regulates misleading ads?", "jurisdiction": "india", "expect_abstain": false, "expected_citation_ids": ["in-consumer-protection-act-2019-misleading-ads", "in-magic-remedies-act-1954"]}
+{"query": "In the patent form, do I have to say where I collected the plant samples from?", "jurisdiction": "india", "expect_abstain": false, "expected_citation_ids": ["in-patents-form1-source-disclosure"]}
+{"query": "क्या मैं चरक संहिता में वर्णित शास्त्रीय आयुर्वेदिक फॉर्मूलेशन का पेटेंट करा सकता हूँ?", "jurisdiction": "india", "expect_abstain": false, "expected_citation_ids": ["in-patents-3p"]}
+{"query": "भारतीय औषधीय पौधे के व्यावसायिक उपयोग के लिए राष्ट्रीय जैव विविधता प्राधिकरण की अनुमति कैसे लें?", "jurisdiction": "india", "expect_abstain": false, "expected_citation_ids": ["in-biodiversity-act-2002-2023-amendment", "in-biodiversity-rules-2024", "in-biodiversity-nba-functions"]}
+{"query": "मैं अपने आयुर्वेदिक ब्रांड का ट्रेडमार्क कैसे पंजीकृत करूँ?", "jurisdiction": "india", "expect_abstain": false, "expected_citation_ids": ["in-trademarks-act-1999"]}
+{"query": "Can I sell ashwagandha capsules in Australia without full drug approval?", "jurisdiction": "international", "expect_abstain": false, "expected_citation_ids": ["intl-australia-tga-listed-medicines"]}
+{"query": "Selling Ayurvedic supplements in Canada - which licence do I need?", "jurisdiction": "international", "expect_abstain": false, "expected_citation_ids": ["intl-health-canada-nhp"]}
+{"query": "I filed in India last month; how long do I have to file abroad and keep my Indian filing date?", "jurisdiction": "international", "expect_abstain": false, "expected_citation_ids": ["intl-paris-convention", "intl-pct"]}
+{"query": "Should I keep my secret herbal recipe confidential instead of patenting it?", "jurisdiction": "international", "expect_abstain": false, "expected_citation_ids": ["intl-trips-art39-trade-secrets"]}
+{"query": "How do I fix a leaking kitchen tap?", "jurisdiction": "india", "expect_abstain": true, "expected_citation_ids": []}
+{"query": "Who won the cricket world cup in 2011?", "jurisdiction": "international", "expect_abstain": true, "expected_citation_ids": []}
+{"query": "Write me a Python function to reverse a string", "jurisdiction": "international", "expect_abstain": true, "expected_citation_ids": []}
+{"query": "मुंबई में कल मौसम कैसा रहेगा?", "jurisdiction": "india", "expect_abstain": true, "expected_citation_ids": []}

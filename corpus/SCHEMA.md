@@ -1,7 +1,8 @@
 # Corpus document schema
 
 Every corpus entry is a single retrievable "chunk" describing one provision, treaty article, rule, or
-registry/record. The RAG pipeline embeds the `title` + `summary` + `tags` and returns the full object
+registry/record. The RAG pipeline embeds the title, instrument, citation, summary, excerpt and tags
+(`backend/app/retrieval/corpus.py:document_text`) and returns the full object
 as a citation when it is retrieved.
 
 ```jsonc
