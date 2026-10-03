@@ -61,6 +61,7 @@ Hindi, 7 off-topic), on a 16-core CPU with no GPU:
 | **embeddinggemma** (default) | none | 25/28 | 28/28 | 7/7 | 0.48 vs 0.16 | ~150 ms |
 | embeddinggemma | MiniLM-L6 cross-encoder | 22/28 | 26/28 | 7/7 | overlapping | +850 ms |
 | embeddinggemma | jina multilingual v2 | 27/28 | 28/28 | 7/7 | clean | +6.5 s |
+| qwen3-embedding:8b-q8_0 | none | 26/28 | 28/28 | 1/7 at default threshold | 0.64 vs 0.59 | ~3.5 s (11 s max) |
 | qwen3-embedding:0.6b | none | 27/28 | 28/28 | 2/7 at default threshold | 0.54 vs 0.51 | ~240 ms |
 | nomic-embed-text | none | 16/28 | 25/28 | — | overlapping | ~110 ms |
 
@@ -75,8 +76,11 @@ Conclusions behind the defaults:
   question fails, and it adds ~0.85 s per query on CPU. The jina multilingual reranker is
   slightly better than no reranker but far too slow on CPU. The reranker stays pluggable for
   a GPU deployment or a larger corpus.
-- The `dengcao/Qwen3-Embedding-8B` Ollama build is packaged as a completion-only model and
-  rejects embedding requests; use the official `qwen3-embedding:*` tags instead.
+- **Qwen3-Embedding-8B** ranks one more question correctly, but on CPU it takes ~3.5 s per
+  query (23x slower) and leaves only a thin margin between answerable and off-topic
+  questions, which makes abstention fragile. Worth revisiting on a GPU. Note that the
+  `dengcao/Qwen3-Embedding-8B` Ollama build is packaged as completion-only and rejects
+  embedding requests; use the official `qwen3-embedding:8b-q8_0` tag.
 
 To try another model, set `EMBEDDING_MODEL` and its prefixes in `backend/.env`, run
 `make eval`, and copy the suggested threshold into `CONFIDENCE_ABSTAIN`.
