@@ -16,9 +16,10 @@ export default function EscalateDialog({ question, jurisdiction, onClose }) {
   const [state, setState] = useState({ status: "idle" });
 
   useEffect(() => {
+    // No close() in a cleanup: under StrictMode its async "close" event would unmount the
+    // dialog right after it opens. Unmounting removes it from the screen anyway.
     const dialog = ref.current;
-    dialog?.showModal();
-    return () => dialog?.close();
+    if (dialog && !dialog.open) dialog.showModal();
   }, []);
 
   const submit = async (e) => {
