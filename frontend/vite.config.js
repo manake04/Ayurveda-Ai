@@ -6,5 +6,8 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
+    // In development the UI calls /api on its own origin and Vite forwards it to FastAPI,
+    // so no CORS setup is needed locally.
+    proxy: { "/api": "http://127.0.0.1:8000" },
   },
 });

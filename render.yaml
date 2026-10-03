@@ -1,26 +1,34 @@
+# Render blueprint for the backend API (the UI is deployed to GitHub Pages by CI).
+#
+# Render can't run Ollama, so the hosted backend uses Gemini for embeddings as well as
+# answers. Set GEMINI_API_KEY in the Render dashboard (it is deliberately not synced
+# from this file). The FAISS index is built on first start (one API call for 45 docs).
+# Confidence thresholds are embedding-model specific: run `python -m eval.run_eval`
+# locally with the same EMBEDDING_* settings and copy the suggested values here.
 services:
   - type: web
-    name: ip-sakti-sahayak-backend
+    name: ip-sakti-sahayak-api
     runtime: python
     plan: free
     rootDir: backend
-    buildCommand: >-
-      pip install -r requirements.txt &&
-      python scripts/build_index.py &&
-      python scripts/build_graph.py
+    buildCommand: pip install -r requirements.txt
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
     envVars:
       - key: PYTHON_VERSION
-        value: 3.11.9
+        value: 3.12.7
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: LLM_PROVIDER
+        value: gemini
+      - key: EMBEDDING_PROVIDER
+        value: gemini
+      - key: EMBEDDING_MODEL
+        value: gemini-embedding-001
+      - key: EMBEDDING_QUERY_PREFIX
+        value: ""
+      - key: EMBEDDING_DOCUMENT_PREFIX
+        value: ""
       - key: CORS_ORIGINS
-        # Add your GitHub Pages URL here once you know it, e.g.
-        # https://<user>.github.io,https://<user>.github.io/Ayurveda-Ai
-        value: http://localhost:5173,http://127.0.0.1:5173
-      - key: CORPUS_DIR
-        value: ../corpus
-      - key: INDEX_DIR
-        value: ./data/index
-      - key: GRAPH_DIR
-        value: ./data/graph
-      - key: AUDIT_LOG_PATH
-        value: ./data/audit_log.jsonl
+        # Your GitHub Pages origin, e.g. https://<user>.github.io
+        value: http://localhost:5173

@@ -1,4 +1,4 @@
-from app.classifier import step
+from app.domain.classifier import step
 
 
 def test_classical_path():
@@ -47,7 +47,7 @@ def test_invalid_answer_raises():
 
 
 def test_every_leaf_has_relevant_corpus_ids():
-    from app.classifier import TREE
+    from app.domain.classifier import TREE
 
     for node_id, node in TREE.items():
         if node["type"] == "result":

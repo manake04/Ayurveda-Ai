@@ -30,37 +30,21 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
           cache: "pip"
-          cache-dependency-path: backend/requirements.txt
+          cache-dependency-path: backend/requirements*.txt
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r requirements-dev.txt
 
-      - name: Build retrieval index
-        run: python scripts/build_index.py
+      - name: Lint
+        run: ruff check . && ruff format --check .
 
-      - name: Build knowledge graph
-        run: python scripts/build_graph.py
-
-      - name: Run tests
-        run: python -m pytest tests/ -v
-
-      - name: Run eval harness
-        # Exit code reflects pass/fail (see backend/eval/run_eval.py) -- a citation or
-        # abstention regression fails the build, it doesn't just print red text nobody
-        # reads. Output is duplicated into the run's job summary either way.
-        run: python eval/run_eval.py | tee /tmp/eval_output.txt
-
-      - name: Publish eval results to job summary
-        if: always()
-        run: |
-          {
-            echo "### Eval harness results"
-            echo '```'
-            sed -n '/--- Summary ---/,$p' /tmp/eval_output.txt
-            echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
+      # Tests use deterministic fake embedding/LLM models, so no Ollama or API key is
+      # needed here. The retrieval-quality eval (python -m eval.run_eval) needs the real
+      # models and is run locally before changing models or thresholds.
+      - name: Test
+        run: python -m pytest -q
 
   frontend:
     runs-on: ubuntu-latest

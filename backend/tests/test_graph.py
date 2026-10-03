@@ -1,4 +1,4 @@
-"""Tests for the NetworkX-backed knowledge graph (app/graph.py).
+"""Tests for the NetworkX-backed knowledge graph (app/knowledge/graph.py).
 
 Covers: every corpus document gets a node; regime/jurisdiction/category concept nodes and
 edges are correctly auto-derived (so they can't silently drift out of sync with the corpus
@@ -7,33 +7,24 @@ corpus/graph_edges.json round-trip through related()/path()/export(); and refere
 integrity of graph_edges.json itself, since those ids are hand-maintained and typos there
 would otherwise fail silently.
 """
+
 import json
 
 import pytest
 
-from app import config
-from app.classifier import TREE as CLASSIFIER_TREE
-from app.corpus_loader import load_corpus
-from app.graph import GraphStore, _category_node, _jurisdiction_node, _regime_node
+from app.domain.classifier import TREE as CLASSIFIER_TREE
+from app.knowledge.graph import GraphStore, _category_node, _jurisdiction_node, _regime_node
+from tests.conftest import GRAPH_EDGES
 
 
 @pytest.fixture(scope="module")
 def graph_edges_spec():
-    with open(config.GRAPH_EDGES_PATH, "r", encoding="utf-8") as f:
-        return json.load(f)
+    return json.loads(GRAPH_EDGES.read_text(encoding="utf-8"))
 
 
 @pytest.fixture(scope="module")
-def docs():
-    return load_corpus(config.CORPUS_DIR)
-
-
-@pytest.fixture(scope="module")
-def graph_store(tmp_path_factory):
-    g = GraphStore()
-    graph_dir = tmp_path_factory.mktemp("graph_test")
-    g.build(config.CORPUS_DIR, config.GRAPH_EDGES_PATH, graph_dir)
-    return g
+def graph_store(docs):
+    return GraphStore.build(docs, GRAPH_EDGES)
 
 
 def test_graph_edges_json_only_references_real_corpus_ids(graph_edges_spec, docs):
@@ -42,7 +33,9 @@ def test_graph_edges_json_only_references_real_corpus_ids(graph_edges_spec, docs
     assertion message rather than only as a build-time crash."""
     doc_ids = {d["id"] for d in docs}
     bad = [
-        e for e in graph_edges_spec["doc_relations"] if e["source"] not in doc_ids or e["target"] not in doc_ids
+        e
+        for e in graph_edges_spec["doc_relations"]
+        if e["source"] not in doc_ids or e["target"] not in doc_ids
     ]
     assert not bad, f"doc_relations reference unknown corpus id(s): {bad}"
 
@@ -87,9 +80,7 @@ def test_category_nodes_cover_every_classifier_leaf(graph_store):
 def test_institution_node_connects_to_its_documents(graph_store, graph_edges_spec):
     nba_related = graph_store.related("institution:NBA", hops=1)
     doc_neighbors = {r["id"] for r in nba_related if r["node_type"] == "document"}
-    expected = {
-        e["source"] for e in graph_edges_spec["doc_institution"] if e["target"] == "institution:NBA"
-    }
+    expected = {e["source"] for e in graph_edges_spec["doc_institution"] if e["target"] == "institution:NBA"}
     assert expected  # sanity: the fixture data actually has NBA-linked docs
     assert expected.issubset(doc_neighbors)
     for r in nba_related:
@@ -148,7 +139,7 @@ def test_export_returns_well_formed_nodes_and_edges(graph_store, docs):
         assert edge["target"] in node_ids
 
 
-def test_build_raises_on_unknown_doc_relation_id(tmp_path):
+def test_build_raises_on_unknown_doc_relation_id(tmp_path, docs):
     """GraphStore.build()'s own fail-fast check (belt-and-braces alongside the integrity
     test above): a bad id in a graph_edges.json should never be silently swallowed."""
     bad_edges_path = tmp_path / "graph_edges.json"
@@ -159,11 +150,12 @@ def test_build_raises_on_unknown_doc_relation_id(tmp_path):
                 "category_labels": {},
                 "institution_nodes": [],
                 "doc_institution": [],
-                "doc_relations": [{"source": "in-tkdl", "target": "not-a-real-doc-id", "relation": "SUPPORTS"}],
+                "doc_relations": [
+                    {"source": "in-tkdl", "target": "not-a-real-doc-id", "relation": "SUPPORTS"}
+                ],
             }
         ),
         encoding="utf-8",
     )
-    g = GraphStore()
     with pytest.raises(ValueError):
-        g.build(config.CORPUS_DIR, bad_edges_path, tmp_path / "graph_out")
+        GraphStore.build(docs, bad_edges_path)

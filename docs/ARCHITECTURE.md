@@ -1,182 +1,181 @@
 # Architecture
 
 ```
-                          ┌────────────────────────────────────┐
-                          │            React frontend            │
-                          │       (Vite + Tailwind, :5173)       │
-                          │                                       │
-                          │  Ask (standard + agentic mode) ·      │
-                          │  Knowledge graph · Classify · ABS ·   │
-                          │  TKDL pointer · Connectors            │
-                          └──────────────────┬────────────────────┘
-                                             │ REST / JSON (fetch)
-                          ┌──────────────────▼────────────────────┐
-                          │            FastAPI backend              │
-                          │                (:8000)                  │
-                          │                                          │
-                          │  /ask            -> rag.py               │
-                          │  /ask/agentic    -> agent.py -> rag.py   │
-                          │  /graph/*        -> graph.py             │
-                          │  /classify       -> classifier.py        │
-                          │  /abs-helper     -> abs_helper.py        │
-                          │  /tkdl-pointer   -> tkdl.py               │
-                          │  /connectors     -> connectors.py         │
-                          │  /audit/recent   -> audit.py               │
-                          └──┬──────────────┬──────────────┬──────────┘
-                             │              │              │
-              ┌──────────────▼───┐  ┌───────▼────────┐  ┌──▼──────────────────┐
-              │   VectorStore     │  │   GraphStore    │  │   Optional LLM       │
-              │ TF-IDF (sklearn), │  │ NetworkX+JSON,  │  │ (Anthropic/OpenAI)   │
-              │ + optional dense  │  │ backend/data/   │  │ only if API key      │
-              │ re-rank (RRF)     │  │ graph/graph.json│  │ configured; falls    │
-              │ backend/data/     │  └────────▲────────┘  │ back to extractive   │
-              │ index/            │           │           └──────────────────────┘
-              └────────▲──────────┘  ┌────────┴───────────┐
-                       │             │ corpus/graph_edges.json │
-              ┌────────┴───────┐    │ hand-authored institution │
-              │ /corpus/*.json  │◄──┤ + doc-to-doc relations;    │
-              │ curated, cited, │    │ regime/jurisdiction/       │
-              │ version-tracked │    │ category edges auto-derived│
-              └────────────────┘    └────────────────────────────┘
+ Browser (React, GitHub Pages)
+   │  POST /api/ask/stream  (server-sent events)
+   ▼
+ FastAPI ── Container (built once at startup, shared by all requests)
+   │          ├─ Retriever ── Embedder (Ollama | Gemini) ── FAISS index (data/index/)
+   │          │              └─ Reranker (optional, fastembed/ONNX)
+   │          ├─ GraphStore (NetworkX, built in memory from corpus/)
+   │          ├─ LLMs, in fallback order (Gemini → Ollama qwen3.5)
+   │          ├─ RAGPipeline (+ deep-research agent, answer cache)
+   │          ├─ BhashiniTranslator (optional)
+   │          └─ Store (SQLite: audit log, consents, escalations)
+   ├─ /api/ask, /api/ask/stream
+   ├─ /api/graph, /api/graph/nodes/{id}/related
+   ├─ /api/classify, /api/abs-checklist, /api/tkdl-pointer
+   ├─ /api/sources, /api/connectors, /api/consents, /api/escalations
+   ├─ /api/privacy/activity  (GET = see my data, DELETE = erase it)
+   └─ /api/health, /api/config, /api/corpus/stats
 ```
 
-## Request flow for `/ask` (standard mode)
+## Request flow
 
-1. The frontend sends `{ query, jurisdiction, language }`.
-2. `rag.answer_for_jurisdiction` asks the `VectorStore` for the top-k corpus chunks whose
-   TF-IDF vector is closest (cosine similarity) to the query, filtered to the chosen
-   jurisdiction (India / International / both — kept as two separate result blocks when
-   "both" is chosen, never merged into one undifferentiated answer). If a dense embedding
-   index has been built (see below), the candidate pool is re-ranked via Reciprocal Rank
-   Fusion, but the *score* used for confidence bucketing always stays the original TF-IDF
-   score.
-3. The top similarity score is bucketed into a confidence level (`high` / `medium` /
-   `low`). Below the low threshold, the assistant **abstains** rather than answering --
-   this is the safe-abstention behaviour the problem statement asks the system to be
-   evaluable on.
-4. If no LLM key is configured (the default), the answer is assembled directly from
-   the retrieved chunks' own summaries -- nothing is generated that isn't already sourced.
-   If a key is configured, an LLM synthesises a more fluent answer but is instructed to
-   use *only* the retrieved context and cite every claim by chunk id; a network/LLM
-   failure falls back to the extractive answer so a demo never goes blank.
-5. Every citation returned to the frontend carries `source_url`, `source_name` and
-   `last_verified` -- the "never fabricate authority" requirement is enforced structurally:
-   the app cannot emit a citation object that wasn't actually retrieved from the corpus.
-6. `rag.graph_expand` takes the top-2 retrieved documents and asks the `GraphStore` for
-   1-hop neighbours connected by an "answer-relevant" relation (e.g. `SUPPORTS`,
-   `ENFORCES`, `ANALOGOUS_TO`) -- these come back as `graph_related` items, rendered
-   distinctly from direct citations, so a requirement that shares no vocabulary with the
-   query (but is known to apply alongside it) still has a chance to surface.
-7. The call is written to the local audit log (`backend/data/audit_log.jsonl`).
+1. **Embed once.** The question is embedded a single time (cached per question text), even
+   when both jurisdictions are requested.
+2. **Search.** FAISS returns every document ranked by cosine similarity. With 45 documents an
+   exact flat index costs well under a millisecond; switch to HNSW past ~100k chunks.
+3. **Split by jurisdiction.** The ranking is partitioned into India and International, and the
+   top 5 of each are kept. The two are never merged.
+4. **Rerank (optional).** If `RERANKER_MODEL` is set, a cross-encoder rescores the top
+   candidates. Off by default; see the benchmarks below.
+5. **Confidence.** The best score decides `high`, `medium` or `low`. `low` means the assistant
+   declines without calling the LLM. Thresholds are model-specific and tuned with the eval.
+6. **Stream.** The `sources` event (citations, confidence, related documents) is sent before
+   generation starts, so the UI shows sources immediately. Text then arrives as `delta`
+   events. For "Both", the two jurisdictions generate concurrently and their events interleave.
+7. **Cite-check.** The model sees only the retrieved documents, numbered `[1]..[n]`, and is
+   told to cite every factual sentence. Any `[n]` outside that range is removed before the
+   final `done` event, so the UI cannot show a citation to something that wasn't retrieved.
+8. **Fallback.** Gemini retries brief failures (429/5xx, e.g. 503 "high demand") after 1 s and
+   3 s. Models are then tried in order (`LLM_PROVIDER`, `LLM_FALLBACK_PROVIDER`): if one fails
+   before writing anything, the next answers; if one fails mid-answer, the answer switches to
+   quoting the source summaries rather than splicing two models' text. Fallbacks aren't cached.
+9. **Cache.** Successful answers are cached in memory by normalised question, jurisdiction and
+   language, so a repeated question returns instantly with no LLM cost.
 
-## Request flow for `/ask/agentic`
+`POST /api/ask` runs the same stream to completion and returns one JSON object. The eval and
+tests use it.
 
-`app/agent.py` sits in front of the same `rag.answer_for_jurisdiction` used by standard
-`/ask` -- it only decides *how many* lookups to run and *what to ask each one*, never
-generates answer text itself:
+### Stream protocol
 
-1. **Jurisdiction planning**: if the caller asked for `"both"`, both jurisdictions are
-   always planned as separate steps. If a single jurisdiction was requested but the
-   *other* one also scores confidently (above the standard absolute confidence threshold)
-   against the same query, a step for it is added too -- this is genuine automatic
-   cross-jurisdiction detection, not just honoring an explicit "both" request.
-2. **Regime planning**: within each planned jurisdiction, `VectorStore.top_regimes` looks
-   at which distinct legal regimes appear among the top hits, using a *relative* threshold
-   (a regime counts if it scores at least a fraction of the query's own top score) rather
-   than the standard absolute bar -- a compound query's relevance to any one regime is
-   naturally lower than a single-topic query's relevance to its one topic, so a fixed
-   absolute cutoff under-detects compound questions. Two or more qualifying regimes means
-   one focused retrieval step per regime instead of one blended lookup.
-3. Each planned step runs through the exact same grounded retrieval + graph-expansion path
-   as standard `/ask`, so it inherits the same "never cite what wasn't retrieved"
-   guarantee and the same confidence/abstention behaviour per step (a step can itself
-   abstain if its regime-restricted search doesn't clear the absolute confidence bar, even
-   though that regime was detected as one of the query's top themes by the more lenient
-   relative threshold used for planning -- this is intentional: planning and answering use
-   different, purpose-appropriate thresholds).
-4. A final cross-cutting graph pass expands the *union* of every step's citations one hop
-   further, so a requirement linked to any step's findings (not just the top hit of one of
-   them) still has a chance to surface.
-5. The response carries `plan_summary` (a human-readable one-line explanation), `steps`
-   (the ordered plan with each step's reasoning), and `sections` (one grounded,
-   independently-confidenced answer per step) -- the frontend's `AgenticTrace` component
-   renders the plan, and each section reuses the same `JurisdictionAnswerBlock` component
-   standard mode uses.
+```
+event: plan     data: {"steps":[{"question":"...","jurisdictions":["india"]}, ...]}   (deep research only)
+event: step     data: {"index":0,"found":{"india":5}}                                 (deep research only)
+event: sources  data: {"jurisdiction":"india","confidence":"high","abstained":false,"citations":[...],"related":[...]}
+event: delta    data: {"jurisdiction":"india","text":"Section 3(p) excludes "}
+event: done     data: {"jurisdiction":"india","answer":"<final, cite-checked text>","generated_by":"gemini:gemini-flash-latest"}
+event: end      data: {"latency_ms":1840}
+```
 
-See `app/agent.py`'s module docstring for exactly where a future LLM-backed planner would
-replace `build_plan`'s rule-based body without changing this response shape at all.
+## Deep research (agentic mode)
 
-## Knowledge graph (`app/graph.py`)
+`rag/agent.py`, enabled per question with `mode: "agentic"` ("Deep research" in the UI):
 
-A `GraphStore` wraps a `networkx.MultiDiGraph`, persisted as node-link JSON
-(`backend/data/graph/graph.json`) -- no graph database server to run. Four node types:
+1. **Plan.** One JSON-schema call (`LLM.complete_json`, same fallback order; for Ollama the
+   schema is also spelled out in the prompt, since qwen3.5 ignores Ollama's `format`) splits the
+   question into at most `AGENTIC_MAX_STEPS` self-contained English sub-questions, each tagged
+   with its jurisdictions. A one-step plan, or a failed plan, falls back to standard mode.
+2. **Retrieve.** All sub-questions are embedded in one batch call, then searched separately.
+3. **Merge.** Per jurisdiction, the confident hits of every sub-question are unioned, keeping
+   the best score per document and which sub-question found it, capped at
+   `AGENTIC_MAX_SOURCES`.
+4. **Answer.** The normal generator writes each jurisdiction's answer, listing only the
+   sub-questions tagged with that jurisdiction and marking each source with the part(s) it
+   serves. Citation checking, abstention, graph expansion and caching work unchanged.
 
-- **document** -- one per corpus entry, carrying its title/jurisdiction/regime/source URL.
-- **regime**, **jurisdiction**, **category** -- concept nodes *auto-derived* at build time
-  from the corpus itself and from `classifier.TREE`'s leaves, so they cannot drift out of
-  sync with either as the corpus grows.
-- **institution** -- administering bodies (NBA, CDSCO, FSSAI, WIPO, CCPA), hand-authored
-  in `corpus/graph_edges.json` alongside genuinely judgment-call document-to-document
-  relations (`SUPPORTS`, `ENFORCES`, `ANALOGOUS_TO`, `UMBRELLA_OVER`, etc.) that a human
-  had to decide, not derive.
+## Privacy, audit and consent (DPDP)
 
-`GraphStore.build()` raises immediately if `graph_edges.json` references an unknown corpus
-id, so a typo in the hand-authored file fails fast rather than silently producing a
-dangling edge; `tests/test_graph.py` also checks referential integrity directly. The
-frontend's **Knowledge graph** tab (`GraphExplorer.jsx`) is a from-scratch force-directed
-canvas renderer -- deliberately not a charting library dependency, since the graph is small
-enough (a few hundred nodes/edges) that a plain O(n²) repulsion simulation is fast, and
-keeping it dependency-free keeps the visualisation fully auditable.
+`store.py` keeps three SQLite tables, all keyed by an anonymous per-browser session id (the
+`X-Session-Id` header, a random UUID in localStorage; no accounts):
 
-## Why TF-IDF instead of a neural embedding model as the *default*
+- **audit_events**: one row per answered question with jurisdiction, mode, language,
+  confidence, the model that answered and latency. The question is stored as a SHA-256
+  fingerprint and a length, not as text, unless `AUDIT_STORE_QUERY_TEXT=true`.
+- **consents**: every grant or withdrawal for a paid database (Manupatra, SCC Online). No paid
+  connector is integrated yet; when one is, it must check this table for the session first.
+- **escalations**: questions the user chose to send to a human facilitator, with optional
+  contact details, only after an explicit consent checkbox.
 
-See the docstring in `backend/app/vectorstore.py`. Short version: the corpus is small and
-lexically distinctive (statute names, section numbers), so sparse retrieval is accurate,
-free, fully offline after `pip install`, and auditable ("why was this the citation?" has
-a literal keyword-overlap answer). `VectorStore` is a narrow interface
-(`build`, `load`, `search`, `attach_dense`) specifically so a dense multilingual encoder
-can be opportunistically layered on top (see `app/embeddings.py` and
-`scripts/build_dense_index.py`) without touching `rag.py`, `agent.py`, `main.py`, or the
-frontend -- when no dense index has been built, behaviour is byte-for-byte identical to
-TF-IDF alone.
+Users can see everything stored for their browser and delete it (`/api/privacy/activity`).
+Rows older than `AUDIT_RETENTION_DAYS` are purged at startup.
 
-## Formulation classification flow
+## Escalation to a human
 
-`backend/app/classifier.py` encodes the decision tree from the problem statement as a
-small dict-based state machine (`TREE`), walked one yes/no question at a time by
-`POST /classify`. Each leaf carries the regulatory requirement and the very different
-IP/ABS posture for that category, plus the corpus ids that back it up.
+Answers marked "Partial match" or declined show "Ask a human IP facilitator". The dialog
+creates a ticket (`ESC-XXXXXX`) and, if `ESCALATION_WEBHOOK_URL` is set, POSTs it there (a
+helpdesk, Slack or Teams webhook). `ESCALATION_NAME`, `ESCALATION_EMAIL` and `ESCALATION_URL`
+add a direct contact; without them the dialog links to IP India.
 
-## ABS helper
+## Languages and Bhashini
 
-`backend/app/abs_helper.py` turns six yes/no facts about the user's situation into a
-checklist of which Access-and-Benefit-Sharing duties are likely triggered (Biological
-Diversity Act / NBA approval, patent source-disclosure, the 2023 AYUSH exemption, and the
-international Nagoya Protocol / WIPO GRATK Treaty layers), each item linked to its
-corpus citation.
+English and Hindi are answered by the LLM directly (`language: auto | en | hi`). When
+`BHASHINI_USER_ID`, `BHASHINI_API_KEY` and `BHASHINI_PIPELINE_ID` are set, 11 more Indian
+languages appear in the answer-language menu. For those, the question is translated to English,
+answered normally, and the final answer is translated back (it arrives whole rather than
+streamed). The client follows Bhashini's documented two-step ULCA flow (pipeline config, then
+compute). It is covered by mocked tests only, so verify it with real credentials before relying
+on it.
 
-## TKDL / prior-art pointer
+## Models and benchmarks
 
-TKDL is not a public API -- it is shared with patent examiners under non-disclosure
-agreements. `backend/app/tkdl.py` is honest about that limit: it explains what TKDL is
-and does, and hands back real, public complementary prior-art search links (Indian
-Patent Office public search, Espacenet, Google Patents, WIPO PATENTSCOPE) a user can
-actually run today.
+Measured with `make eval` (28 answerable questions, 4 in Hindi; 7 off-topic) on a 16-core CPU
+without a GPU:
 
-## Privacy, audit & consent
+| Embeddings | Reranker | Top-1 | Top-5 | Off-topic declined | Separation* | Latency / query |
+|---|---|---|---|---|---|---|
+| **qwen3-embedding:8b-q8_0** (default) | none | 26/28 | 28/28 | 7/7 | 0.64 vs 0.59 | ~2.5 s |
+| embeddinggemma | none | 25/28 | 28/28 | 7/7 | 0.48 vs 0.16 | ~150 ms |
+| embeddinggemma | MiniLM-L6 cross-encoder | 22/28 | 26/28 | 7/7 | overlapping | +850 ms |
+| embeddinggemma | jina multilingual v2 | 27/28 | 28/28 | 7/7 | clean | +6.5 s |
+| qwen3-embedding:0.6b | none | 27/28 | 28/28 | 2/7 | 0.54 vs 0.51 | ~240 ms |
+| nomic-embed-text | none | 16/28 | 25/28 | — | overlapping | ~110 ms |
 
-- `backend/app/audit.py` appends a timestamped, redacted JSON line per substantive call
-  to a local file -- a minimal, inspectable analogue of the transparency/consent posture
-  the Digital Personal Data Protection Act, 2023 expects (see corpus id
-  `in-dpdp-act-2023`). No data leaves the machine the backend runs on.
-- `backend/app/connectors.py` implements the "use the user's own paid subscription only
-  with explicit, logged permission" requirement as a consent-and-audit pattern (grant /
-  revoke, both logged) ahead of any real paid connector being wired in.
+\* Lowest score of an answerable question vs. highest score of an off-topic one. The wider
+the gap, the more reliable abstention is. Thresholds are per model: run `make eval` after
+switching and copy the suggested value into `CONFIDENCE_ABSTAIN`.
 
-## Multilingual delivery (staged)
+- **Qwen3-Embedding-8B** (default) has the best top-1 accuracy but a thin abstention margin
+  and is slow on CPU; on a GPU the latency largely disappears. Use the official
+  `qwen3-embedding:8b-q8_0` tag: the `dengcao/Qwen3-Embedding-8B` build is packaged
+  completion-only and can't embed.
+- **embeddinggemma** is the best choice on CPU: fast, multilingual, and the widest margin.
+- **Rerankers** don't pay off here. The MiniLM cross-encoder is English-only (every Hindi
+  question fails) and the multilingual jina model is too slow on CPU. The stage stays
+  pluggable (`RERANKER_MODEL`) for a GPU deployment or a larger corpus.
 
-`backend/app/i18n.py` ships English + Hindi UI strings now, and a guarded
-`translate_via_bhashini` function that only activates once Bhashini credentials are
-configured (see `.env.example`) -- consistent with the problem statement's own staging:
-"a citation-grounded retrieval MVP first, ... then the full multilingual and voice
-experience." See `docs/ROADMAP.md`.
+## Running models locally
+
+Everything model-related sits behind two small interfaces: `Embedder` (`retrieval/embeddings.py`)
+and `LLM` (`llm/base.py`). To run fully offline, set `LLM_PROVIDER=ollama` and
+`OLLAMA_LLM_MODEL` to any chat model you've pulled. Ollama requests always send `think: false`
+and `keep_alive: OLLAMA_KEEP_ALIVE` (30 min by default, so large models stay loaded).
+
+On this project's 16-core CPU without a GPU, `qwen3.5` (9.7B, Q4) generates about 4 tokens/s,
+so a full answer takes 1-2 minutes. Holding the 8B embedding model (~9.6 GB) and qwen3.5
+(~6.6 GB) in memory together needs ~17 GB of free RAM. Small models (under ~4B parameters)
+follow the citation format unreliably.
+
+## Knowledge graph
+
+`knowledge/graph.py` builds a NetworkX multigraph at startup (a few milliseconds):
+
+- **document** nodes, one per corpus entry;
+- **regime**, **jurisdiction** and **category** nodes, derived automatically from the corpus
+  and the classifier tree so they can't drift out of sync;
+- **institution** nodes and document-to-document relations (`SUPPORTS`, `ENFORCES`,
+  `ANALOGOUS_TO`, ...), hand-authored in `corpus/graph_edges.json`.
+
+After retrieval, documents linked to the top two hits by an answer-relevant relation are
+returned as "Also relevant". This surfaces requirements that apply together but share no
+wording with the question.
+
+## Guided tools
+
+- **Formulation classifier** (`domain/classifier.py`): a stateless yes/no decision tree. The
+  client sends all answers so far; the server returns the next question or the result.
+- **ABS checklist** (`domain/abs_checklist.py`): turns six facts into the access-and-benefit-
+  sharing duties that likely apply, each with its corpus sources.
+- **Prior-art pointer** (`domain/tkdl.py`): TKDL is only open to patent examiners, so this
+  explains that and links to public patent databases. It does not pretend to search TKDL.
+
+## Scaling notes
+
+- Apart from the in-memory answer cache, the only state is the SQLite store. For more than
+  one instance, point the store at a shared database (it's a small module with one class).
+  Each instance loads the FAISS index at startup.
+- With hosted Gemini models (`EMBEDDING_PROVIDER=gemini`), an instance needs no GPU and no
+  model files, which suits free and small hosting tiers.
+- Past a few thousand documents: chunk long statutes, move to a FAISS HNSW index, and build
+  the index in CI rather than at startup.
