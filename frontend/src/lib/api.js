@@ -1,10 +1,23 @@
 const BASE_URL = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "");
 
+/** Anonymous per-browser id. Scopes the audit log, consents and "delete my data". */
+function sessionId() {
+  try {
+    let id = localStorage.getItem("sessionId");
+    if (!id) {
+      id = crypto.randomUUID();
+      localStorage.setItem("sessionId", id);
+    }
+    return id;
+  } catch {
+    return "anonymous";
+  }
+}
+
+const headers = () => ({ "Content-Type": "application/json", "X-Session-Id": sessionId() });
+
 async function request(path, options = {}) {
-  const res = await fetch(`${BASE_URL}/api${path}`, {
-    headers: { "Content-Type": "application/json" },
-    ...options,
-  });
+  const res = await fetch(`${BASE_URL}/api${path}`, { headers: headers(), ...options });
   if (!res.ok) {
     let detail = res.statusText;
     try {
@@ -22,13 +35,14 @@ const post = (path, body) => request(path, { method: "POST", body: JSON.stringif
 
 /**
  * Stream an answer over server-sent events. Calls onEvent({type, ...}) for each event:
- * `sources`, `delta`, `done` (per jurisdiction) and a final `end`.
+ * `plan` and `step` (deep research only), then `sources`, `delta`, `done` (per
+ * jurisdiction) and a final `end`.
  */
-export async function streamAnswer({ query, jurisdiction, language }, onEvent, signal) {
+export async function streamAnswer({ query, jurisdiction, language, mode }, onEvent, signal) {
   const res = await fetch(`${BASE_URL}/api/ask/stream`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ query, jurisdiction, language }),
+    headers: headers(),
+    body: JSON.stringify({ query, jurisdiction, language, mode }),
     signal,
   });
   if (!res.ok || !res.body) {
@@ -60,6 +74,13 @@ export async function streamAnswer({ query, jurisdiction, language }, onEvent, s
 
 export const api = {
   health: () => request("/health"),
+  config: () => request("/config"),
+  sources: () => request("/sources"),
+  connectors: () => request("/connectors"),
+  setConsent: (connector, granted) => post("/consents", { connector, granted }),
+  escalate: (ticket) => post("/escalations", ticket),
+  activity: () => request("/privacy/activity"),
+  eraseActivity: () => request("/privacy/activity", { method: "DELETE" }),
   graph: () => request("/graph"),
   related: (nodeId) => request(`/graph/nodes/${encodeURIComponent(nodeId)}/related`),
   classify: (answers) => post("/classify", { answers }),

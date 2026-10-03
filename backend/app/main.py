@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import ask, graph, meta, tools
+from app.api.routes import ask, graph, meta, privacy, tools
 from app.core.config import Settings, get_settings
 from app.core.container import Container
 
@@ -30,12 +30,12 @@ def create_app(settings: Settings | None = None, container: Container | None = N
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origin_list,
-        allow_methods=["GET", "POST"],
-        allow_headers=["Content-Type"],
+        allow_methods=["GET", "POST", "DELETE"],
+        allow_headers=["Content-Type", "X-Session-Id"],
     )
 
     api = APIRouter(prefix="/api")
-    for module in (meta, ask, graph, tools):
+    for module in (meta, ask, graph, tools, privacy):
         api.include_router(module.router)
     app.include_router(api)
     return app

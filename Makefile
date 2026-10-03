@@ -5,12 +5,13 @@ PY := backend/.venv/bin/python
 help:  ## Show this help
 	@grep -E '^[a-z-]+:.*##' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2}'
 
-setup:  ## Install backend + frontend dependencies and pull the embedding model
+setup:  ## Install backend + frontend dependencies and pull the Ollama models
 	python3 -m venv backend/.venv
 	$(PY) -m pip install -q -r backend/requirements-dev.txt
 	cd frontend && npm install
 	test -f backend/.env || cp backend/.env.example backend/.env
-	ollama pull embeddinggemma
+	ollama pull qwen3-embedding:8b-q8_0
+	ollama pull qwen3.5:latest
 
 api:  ## Run the API on :8000 (reloads on change)
 	cd backend && .venv/bin/uvicorn app.main:app --reload --port 8000

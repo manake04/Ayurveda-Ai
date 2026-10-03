@@ -6,8 +6,10 @@ import Sidebar from "./components/layout/Sidebar.jsx";
 import AbsView from "./components/tools/AbsView.jsx";
 import ClassifyView from "./components/tools/ClassifyView.jsx";
 import PriorArtView from "./components/tools/PriorArtView.jsx";
+import SourcesView from "./components/tools/SourcesView.jsx";
 import { useChat } from "./hooks/useChat.js";
 import { api } from "./lib/api.js";
+import { ConfigContext, DEFAULT_CONFIG } from "./lib/config.js";
 import { LangContext, STRINGS } from "./lib/i18n.js";
 
 const stored = (key, fallback) => {
@@ -31,10 +33,18 @@ export default function App() {
   const [theme, setTheme] = useState(() => document.documentElement.dataset.theme || "light");
   const [menuOpen, setMenuOpen] = useState(false);
   const [health, setHealth] = useState(null);
+  const [config, setConfig] = useState(DEFAULT_CONFIG);
   const chat = useChat();
 
   useEffect(() => {
-    api.health().then(setHealth).catch(() => setHealth({ error: true }));
+    api
+      .health()
+      .then(setHealth)
+      .catch(() => setHealth({ error: true }));
+    api
+      .config()
+      .then(setConfig)
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -56,46 +66,53 @@ export default function App() {
 
   return (
     <LangContext.Provider value={langValue}>
-      <div className="flex h-dvh overflow-hidden">
-        <Sidebar
-          view={view}
-          onView={go}
-          onNewChat={() => {
-            chat.reset();
-            go("ask");
-          }}
-          lang={lang}
-          onLang={setLang}
-          theme={theme}
-          onTheme={setTheme}
-          health={health}
-          open={menuOpen}
-          onClose={() => setMenuOpen(false)}
-        />
-        <main className="min-w-0 flex-1">
-          {view === "ask" && <AskView chat={chat} lang={lang} onMenu={openMenu} />}
-          {view === "classify" && (
-            <Page onMenu={openMenu}>
-              <ClassifyView />
-            </Page>
-          )}
-          {view === "abs" && (
-            <Page onMenu={openMenu} wide>
-              <AbsView />
-            </Page>
-          )}
-          {view === "prior-art" && (
-            <Page onMenu={openMenu}>
-              <PriorArtView />
-            </Page>
-          )}
-          {view === "graph" && (
-            <Page onMenu={openMenu} wide>
-              <GraphView />
-            </Page>
-          )}
-        </main>
-      </div>
+      <ConfigContext.Provider value={config}>
+        <div className="flex h-dvh overflow-hidden">
+          <Sidebar
+            view={view}
+            onView={go}
+            onNewChat={() => {
+              chat.reset();
+              go("ask");
+            }}
+            lang={lang}
+            onLang={setLang}
+            theme={theme}
+            onTheme={setTheme}
+            health={health}
+            open={menuOpen}
+            onClose={() => setMenuOpen(false)}
+          />
+          <main className="min-w-0 flex-1">
+            {view === "ask" && <AskView chat={chat} lang={lang} onMenu={openMenu} />}
+            {view === "classify" && (
+              <Page onMenu={openMenu}>
+                <ClassifyView />
+              </Page>
+            )}
+            {view === "abs" && (
+              <Page onMenu={openMenu} wide>
+                <AbsView />
+              </Page>
+            )}
+            {view === "prior-art" && (
+              <Page onMenu={openMenu}>
+                <PriorArtView />
+              </Page>
+            )}
+            {view === "graph" && (
+              <Page onMenu={openMenu} wide>
+                <GraphView />
+              </Page>
+            )}
+            {view === "sources" && (
+              <Page onMenu={openMenu}>
+                <SourcesView />
+              </Page>
+            )}
+          </main>
+        </div>
+      </ConfigContext.Provider>
     </LangContext.Provider>
   );
 }

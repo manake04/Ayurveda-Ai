@@ -20,6 +20,10 @@ class RetrievalResult:
     jurisdiction: Jurisdiction
     hits: list[tuple[Document, float]]  # best first
     confidence: Literal["high", "medium", "low"]
+    # Agentic mode only: the sub-questions this jurisdiction should answer, and for each
+    # doc id the indices (into `parts`) of the sub-questions that found it.
+    parts: list[str] | None = None
+    provenance: dict[str, list[int]] | None = None
 
     @property
     def abstained(self) -> bool:
@@ -40,10 +44,12 @@ class Retriever:
         self.reranker = reranker
 
     async def retrieve(
-        self, query: str, jurisdictions: list[Jurisdiction]
+        self, query: str, jurisdictions: list[Jurisdiction], query_vector=None
     ) -> dict[Jurisdiction, RetrievalResult]:
+        """`query_vector` may be passed in when it was embedded as part of a batch."""
         s = self.settings
-        query_vector = await self.embedder.embed_query(query)
+        if query_vector is None:
+            query_vector = await self.embedder.embed_query(query)
         # One search over the whole corpus, then partition: cheaper than one per jurisdiction.
         ranked = self.store.search(query_vector, k=len(self.store.docs))
 
@@ -52,14 +58,18 @@ class Retriever:
             hits = [(d, sc) for d, sc in ranked if d["jurisdiction"] == _LABEL[jurisdiction]]
             if self.reranker is not None:
                 hits = await self._rerank(query, hits[: s.rerank_candidates])
-                high, abstain = s.rerank_confidence_high, s.rerank_confidence_abstain
-            else:
-                high, abstain = s.confidence_high, s.confidence_abstain
             hits = hits[: s.top_k]
             top = hits[0][1] if hits else float("-inf")
-            confidence = "high" if top >= high else "medium" if top >= abstain else "low"
-            results[jurisdiction] = RetrievalResult(jurisdiction, hits, confidence)
+            results[jurisdiction] = RetrievalResult(jurisdiction, hits, self.confidence(top))
         return results
+
+    def confidence(self, top_score: float) -> Literal["high", "medium", "low"]:
+        s = self.settings
+        if self.reranker is not None:
+            high, abstain = s.rerank_confidence_high, s.rerank_confidence_abstain
+        else:
+            high, abstain = s.confidence_high, s.confidence_abstain
+        return "high" if top_score >= high else "medium" if top_score >= abstain else "low"
 
     async def _rerank(self, query: str, hits: list[tuple[Document, float]]) -> list[tuple[Document, float]]:
         if not hits:

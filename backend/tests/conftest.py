@@ -40,19 +40,37 @@ class FakeEmbedder:
     async def embed_query(self, text: str) -> np.ndarray:
         return self._vec(text)
 
+    async def embed_queries(self, texts: list[str]) -> np.ndarray:
+        return np.vstack([self._vec(t) for t in texts])
+
 
 class FakeLLM:
-    name = "fake:llm"
-
-    def __init__(self, chunks=("Section 3(p) bars this ", "[1]. ", "Also see [9]."), fail=False):
-        self.chunks, self.fail, self.calls = chunks, fail, 0
+    def __init__(
+        self,
+        chunks=("Section 3(p) bars this ", "[1]. ", "Also see [9]."),
+        fail=False,
+        fail_after_first_chunk=False,
+        plan=None,
+        name="fake:llm",
+    ):
+        self.chunks, self.fail, self.fail_after_first_chunk = chunks, fail, fail_after_first_chunk
+        self.plan, self.name = plan, name
+        self.calls, self.prompts = 0, []
 
     async def stream(self, system: str, prompt: str) -> AsyncIterator[str]:
         self.calls += 1
+        self.prompts.append((system, prompt))
         if self.fail:
             raise LLMError("quota exceeded")
-        for chunk in self.chunks:
+        for i, chunk in enumerate(self.chunks):
+            if i == 1 and self.fail_after_first_chunk:
+                raise LLMError("connection dropped")
             yield chunk
+
+    async def complete_json(self, system: str, prompt: str, schema: dict) -> dict:
+        if self.fail or self.plan is None:
+            raise LLMError("no plan")
+        return self.plan
 
 
 @pytest.fixture(scope="session")
@@ -88,7 +106,8 @@ def retriever(settings, store, embedder):
 
 @pytest.fixture
 def make_pipeline(settings, retriever, graph):
-    def _make(llm=None):
-        return RAGPipeline(settings, retriever, graph, llm)
+    def _make(llm=None, translator=None):
+        llms = llm if isinstance(llm, list) else ([llm] if llm else [])
+        return RAGPipeline(settings, retriever, graph, llms, translator)
 
     return _make

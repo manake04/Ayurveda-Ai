@@ -33,3 +33,6 @@
 {"query": "Who won the cricket world cup in 2011?", "jurisdiction": "international", "expect_abstain": true, "expected_citation_ids": []}
 {"query": "Write me a Python function to reverse a string", "jurisdiction": "international", "expect_abstain": true, "expected_citation_ids": []}
 {"query": "मुंबई में कल मौसम कैसा रहेगा?", "jurisdiction": "india", "expect_abstain": true, "expected_citation_ids": []}
+{"query": "I want to patent a new Ayurvedic formulation and also register its brand name in India. What do I need to know?", "jurisdiction": "india", "mode": "agentic", "expect_each": [["in-patents-3p", "in-patents-3j", "in-patents-form1-source-disclosure", "in-patents-amendment-rules-2024"], ["in-trademarks-act-1999"]]}
+{"query": "My product uses an Indian medicinal plant and I want to export it to the EU as a herbal medicine. Which approvals do I need?", "jurisdiction": "both", "mode": "agentic", "expect_each": [["in-biodiversity-act-2002-2023-amendment", "in-biodiversity-rules-2024", "in-biodiversity-nba-functions"], ["intl-eu-thmpd"]]}
+{"query": "Can my Ayurveda Aahara product's ads say it cures diabetes, and how do I protect its packaging design?", "jurisdiction": "india", "mode": "agentic", "expect_each": [["in-fssai-ayurveda-aahara-2022", "in-magic-remedies-act-1954", "in-consumer-protection-act-2019-misleading-ads"], ["in-designs-act-2000"]]}

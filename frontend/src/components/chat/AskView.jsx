@@ -8,13 +8,19 @@ export default function AskView({ chat, lang, onMenu }) {
   const t = useT();
   const [draft, setDraft] = useState("");
   const [jurisdiction, setJurisdiction] = useState("india");
+  const [deep, setDeep] = useState(false);
+  const [language, setLanguage] = useState(lang === "hi" ? "hi" : "auto");
   const bottomRef = useRef(null);
   const { turns, busy, send, stop } = chat;
   const empty = turns.length === 0;
 
-  const language = lang === "hi" ? "hi" : "auto";
-  const ask = (query, scope = jurisdiction) => {
-    send({ query: query.trim(), jurisdiction: scope, language });
+  const ask = (query, opts = {}) => {
+    send({
+      query: query.trim(),
+      jurisdiction: opts.jurisdiction ?? jurisdiction,
+      language: opts.language ?? language,
+      mode: opts.mode ?? (deep ? "agentic" : "standard"),
+    });
     setDraft("");
   };
 
@@ -33,6 +39,10 @@ export default function AskView({ chat, lang, onMenu }) {
       busy={busy}
       jurisdiction={jurisdiction}
       onJurisdiction={setJurisdiction}
+      deep={deep}
+      onDeep={setDeep}
+      language={language}
+      onLanguage={setLanguage}
       autoFocus
     />
   );
@@ -71,7 +81,7 @@ export default function AskView({ chat, lang, onMenu }) {
           <div className="flex-1 overflow-y-auto">
             <div className="mx-auto max-w-3xl space-y-12 px-4 py-8 sm:px-6">
               {turns.map((turn) => (
-                <Turn key={turn.id} turn={turn} onRetry={(tr) => ask(tr.query, tr.jurisdiction)} />
+                <Turn key={turn.id} turn={turn} onRetry={(tr) => ask(tr.query, tr)} />
               ))}
               <div ref={bottomRef} />
             </div>

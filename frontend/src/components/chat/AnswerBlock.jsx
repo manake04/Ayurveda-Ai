@@ -1,6 +1,7 @@
-import { Check, CircleSlash, Copy, Globe2, MapPin } from "lucide-react";
+import { Check, CircleSlash, Copy, Globe2, MapPin, UserRound } from "lucide-react";
 import { useState } from "react";
 import { useT } from "../../lib/i18n.js";
+import EscalateDialog from "./EscalateDialog.jsx";
 import Markdown from "./Markdown.jsx";
 import SourceList from "./SourceList.jsx";
 
@@ -10,10 +11,12 @@ const CONFIDENCE_STYLE = {
   low: "bg-danger-soft text-danger",
 };
 
-export default function AnswerBlock({ turnId, block, showLabel }) {
+export default function AnswerBlock({ turnId, block, showLabel, query }) {
   const t = useT();
   const [highlight, setHighlight] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [escalating, setEscalating] = useState(false);
+  const uncertain = block.abstained || block.confidence === "medium";
   const idPrefix = `t${turnId}-${block.jurisdiction}`;
   const isIndia = block.jurisdiction === "india";
 
@@ -56,9 +59,15 @@ export default function AnswerBlock({ turnId, block, showLabel }) {
       {block.status === "retrieving" && <AnswerSkeleton />}
 
       {block.abstained && block.status === "done" && (
-        <div className="flex gap-3 rounded-xl border border-dashed border-line bg-sunken/60 p-4 text-sm leading-relaxed text-muted">
-          <CircleSlash className="mt-0.5 h-4 w-4 shrink-0" />
-          <p>{block.answer}</p>
+        <div className="space-y-3 rounded-xl border border-dashed border-line bg-sunken/60 p-4">
+          <div className="flex gap-3 text-sm leading-relaxed text-muted">
+            <CircleSlash className="mt-0.5 h-4 w-4 shrink-0" />
+            <p>{block.answer}</p>
+          </div>
+          <button onClick={() => setEscalating(true)} className="btn-outline ml-7 py-1.5 text-xs">
+            <UserRound className="h-3.5 w-3.5" />
+            {t.escalate}
+          </button>
         </div>
       )}
 
@@ -82,6 +91,13 @@ export default function AnswerBlock({ turnId, block, showLabel }) {
                 {copied ? t.copied : t.copy}
               </button>
               {block.generatedBy?.startsWith("extractive") && <span>· {t.quotedFromSources}</span>}
+              <button
+                onClick={() => setEscalating(true)}
+                className={`ml-auto inline-flex items-center gap-1 transition hover:text-ink ${uncertain ? "font-medium text-intl" : ""}`}
+              >
+                <UserRound className="h-3.5 w-3.5" />
+                {uncertain ? t.escalate : t.escalateShort}
+              </button>
             </div>
           )}
 
@@ -94,6 +110,9 @@ export default function AnswerBlock({ turnId, block, showLabel }) {
             done={block.status === "done"}
           />
         </>
+      )}
+      {escalating && (
+        <EscalateDialog question={query} jurisdiction={block.jurisdiction} onClose={() => setEscalating(false)} />
       )}
     </section>
   );

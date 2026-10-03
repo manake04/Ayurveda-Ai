@@ -54,22 +54,32 @@ them.
 - [x] Gemini answer generation, streamed to the UI, with citation numbers checked against
       the retrieved sources. A local Ollama model can be swapped in with one setting.
 - [x] Hindi questions answered in Hindi (multilingual embeddings + language-aware prompt).
-- [x] Removed scaffolding that wasn't doing real work: the rule-based agentic planner (the
-      India/International/Both split covers its main use), the paid-connector consent
-      stub, the Bhashini translation stub and the local audit-log file.
+- [x] Replaced the earlier stubs with working implementations: an LLM-planned deep-research
+      mode (sub-questions retrieved separately, answered part by part), a SQLite audit log
+      that stores question fingerprints rather than text, logged and revocable consent for
+      paid databases, "see / delete my data", escalation tickets to a human facilitator, and
+      a Bhashini translation client for languages beyond English and Hindi.
+- [x] Gemini answers with a local Ollama model (qwen3.5) as automatic fallback, thinking off
+      on both.
 - [x] Rebuilt the frontend: streaming chat with inline citation chips, light/dark themes,
       English/Hindi UI, mobile layout.
 
 ## Stage 3 -- Paid-source connectors
-- Real integrations for the user's own subscriptions (e.g. Manupatra, SCC Online), gated
-  behind explicit, logged consent.
-- An audit log in a proper store (encrypted, retention-limited), with a data-subject
-  access/delete flow aligned to the DPDP Act.
+- Real integrations for the user's own subscriptions (e.g. Manupatra, SCC Online). The
+  consent check they must pass already exists (`store.consents`).
+- Encrypt the SQLite store at rest and move it to a managed database for multi-instance
+  deployments.
 
 ## Stage 4 -- More languages and voice
-- Extend beyond Hindi via Bhashini (translation for the UI and source summaries).
+- Verify the Bhashini client against live credentials; translate UI strings and source
+  summaries as well as answers.
 - Voice input/output via Bhashini's ASR/TTS pipelines.
 - A parallel multilingual gold set in the eval.
+
+## Corpus gaps found in testing
+- **EU trade marks (EUIPO / EU Trade Mark Regulation).** Questions about registering a brand
+  in the EU find only the Madrid System and the EU herbal-medicines directive, both below
+  the confidence threshold, so the assistant correctly declines. Add a live-verified entry.
 
 ## Evaluation, ongoing
 - **Citation correctness and safe abstention:** `make eval`, 35 cases including Hindi

@@ -11,11 +11,14 @@ import re
 import time
 from collections import OrderedDict
 from collections.abc import AsyncIterator
+from dataclasses import dataclass
 
 from app.core.config import DISCLAIMER, Settings
+from app.i18n import BHASHINI_LANGUAGES
+from app.i18n.bhashini import BhashiniTranslator, TranslationError
 from app.knowledge.graph import GraphStore
 from app.llm import LLM, LLMError
-from app.rag import prompts
+from app.rag import agent, prompts
 from app.retrieval.corpus import Document
 from app.retrieval.retriever import Jurisdiction, RetrievalResult, Retriever
 from app.schemas.ask import (
@@ -28,7 +31,7 @@ from app.schemas.ask import (
 
 log = logging.getLogger(__name__)
 
-Event = dict  # {"type": "sources" | "delta" | "done" | "end", ...}
+Event = dict  # {"type": "plan" | "step" | "sources" | "delta" | "done" | "end", ...}
 
 # Graph relations worth surfacing next to an answer. Excludes the auto-derived
 # document->concept edges (regime, jurisdiction, category), which aren't citable sources.
@@ -56,55 +59,98 @@ _RELATED_RELATIONS = {
 _REF = re.compile(r"\[(\d+)\]")
 
 
+@dataclass
+class _Job:
+    """What one request asks the generator to do."""
+
+    query: str  # the question as the model sees it (English if it was translated)
+    language: str  # language rule for the prompt: auto | en | hi
+    parts: list[str] | None = None  # agentic sub-questions (all jurisdictions)
+    translate_to: str | None = None  # Bhashini target language for the final answer
+
+
 class RAGPipeline:
     def __init__(
         self,
         settings: Settings,
         retriever: Retriever,
         graph: GraphStore,
-        llm: LLM | None,
+        llms: list[LLM],
+        translator: BhashiniTranslator | None = None,
     ):
         self.settings = settings
         self.retriever = retriever
         self.graph = graph
-        self.llm = llm
+        self.llms = llms  # tried in order; empty means extractive answers
+        self.translator = translator
         self._docs_by_id = {d["id"]: d for d in retriever.store.docs}
-        self._cache: OrderedDict[tuple, list[JurisdictionAnswer]] = OrderedDict()
+        self._cache: OrderedDict[tuple, tuple[list[str] | None, list[JurisdictionAnswer]]] = OrderedDict()
 
     # ---- public API ----
 
     async def stream(self, req: AskRequest) -> AsyncIterator[Event]:
-        """Yield events as the answer is produced: sources first, then text deltas."""
+        """Yield events as the answer is produced: plan (agentic), sources, text, done."""
         started = time.perf_counter()
         jurisdictions: list[Jurisdiction] = (
             ["india", "international"] if req.jurisdiction == "both" else [req.jurisdiction]
         )
-        key = (" ".join(req.query.lower().split()), req.jurisdiction, req.language)
+        key = (" ".join(req.query.lower().split()), req.jurisdiction, req.language, req.mode)
 
         cached = self._cache_get(key)
         if cached is not None:
-            for answer in cached:
+            plan_questions, answers = cached
+            if plan_questions:
+                yield {"type": "plan", "steps": [{"question": q} for q in plan_questions]}
+            for answer in answers:
                 yield self._sources_event(answer)
-                yield {
-                    "type": "done",
-                    **answer.model_dump(include={"jurisdiction", "answer", "generated_by"}),
-                }
+                yield self._done_event(answer)
         else:
-            results = await self.retriever.retrieve(req.query, jurisdictions)
+            job = await self._prepare(req)
+            results = None
+            if req.mode == "agentic":
+                steps = await agent.plan(self.llms, job.query, jurisdictions, self.settings.agentic_max_steps)
+                if len(steps) >= 2:
+                    yield {
+                        "type": "plan",
+                        "steps": [
+                            {"question": st.question, "jurisdictions": st.jurisdictions} for st in steps
+                        ],
+                    }
+                    vectors = await self.retriever.embedder.embed_queries([st.question for st in steps])
+                    per_step = []
+                    for index, (step, vector) in enumerate(zip(steps, vectors, strict=True)):
+                        step_results = await self.retriever.retrieve(
+                            step.question, step.jurisdictions, vector
+                        )
+                        per_step.append(step_results)
+                        found = {j: 0 if r.abstained else len(r.hits) for j, r in step_results.items()}
+                        yield {"type": "step", "index": index, "found": found}
+                    results = {
+                        j: agent.merge(j, steps, per_step, self.settings.agentic_max_sources)
+                        for j in jurisdictions
+                    }
+                    job.parts = [st.question for st in steps]
+            if results is None:
+                results = await self.retriever.retrieve(job.query, jurisdictions)
+
             answers: list[JurisdictionAnswer] = []
-            async for event in self._generate_all(req, results, answers):
+            async for event in self._generate_all(job, results, answers):
                 yield event
-            if all(not a.generated_by.endswith("(fallback)") for a in answers):
-                self._cache_put(key, sorted(answers, key=lambda a: jurisdictions.index(a.jurisdiction)))
+            if all("fallback" not in a.generated_by and "failed" not in a.generated_by for a in answers):
+                ordered = sorted(answers, key=lambda a: jurisdictions.index(a.jurisdiction))
+                self._cache_put(key, (job.parts, ordered))
 
         yield {"type": "end", "latency_ms": int((time.perf_counter() - started) * 1000)}
 
     async def answer(self, req: AskRequest) -> AskResponse:
         """Non-streaming variant: run the stream to completion and collect the result."""
         answers: dict[str, dict] = {}
+        plan_questions = None
         latency = 0
         async for event in self.stream(req):
-            if event["type"] == "sources":
+            if event["type"] == "plan":
+                plan_questions = [st["question"] for st in event["steps"]]
+            elif event["type"] == "sources":
                 answers[event["jurisdiction"]] = {k: v for k, v in event.items() if k != "type"}
             elif event["type"] == "done":
                 answers[event["jurisdiction"]].update(
@@ -114,6 +160,7 @@ class RAGPipeline:
                 latency = event["latency_ms"]
         return AskResponse(
             query=req.query,
+            plan=plan_questions,
             answers=[JurisdictionAnswer(**a) for a in answers.values()],
             disclaimer=DISCLAIMER,
             latency_ms=latency,
@@ -121,9 +168,20 @@ class RAGPipeline:
 
     # ---- generation ----
 
+    async def _prepare(self, req: AskRequest) -> _Job:
+        """Translate the question to English first when the answer language needs Bhashini."""
+        if req.language in BHASHINI_LANGUAGES and self.translator is not None:
+            try:
+                english = await self.translator.translate(req.query, req.language, "en")
+                return _Job(query=english, language="en", translate_to=req.language)
+            except TranslationError as exc:
+                log.warning("Question translation failed, answering in the question's language: %s", exc)
+        language = req.language if req.language in ("en", "hi") else "auto"
+        return _Job(query=req.query, language=language)
+
     async def _generate_all(
         self,
-        req: AskRequest,
+        job: _Job,
         results: dict[Jurisdiction, RetrievalResult],
         answers: list[JurisdictionAnswer],
     ) -> AsyncIterator[Event]:
@@ -132,7 +190,7 @@ class RAGPipeline:
 
         async def run(result: RetrievalResult) -> None:
             try:
-                async for event in self._generate_one(req, result, answers):
+                async for event in self._generate_one(job, result, answers):
                     await queue.put(event)
             finally:
                 await queue.put(None)
@@ -151,7 +209,7 @@ class RAGPipeline:
                 task.cancel()
 
     async def _generate_one(
-        self, req: AskRequest, result: RetrievalResult, answers: list[JurisdictionAnswer]
+        self, job: _Job, result: RetrievalResult, answers: list[JurisdictionAnswer]
     ) -> AsyncIterator[Event]:
         jurisdiction = result.jurisdiction
         citations = [self._citation(n, doc, score) for n, (doc, score) in enumerate(result.hits, 1)]
@@ -168,29 +226,50 @@ class RAGPipeline:
 
         if result.abstained:
             answer.answer = prompts.ABSTENTION_TEXT[jurisdiction]
-        elif self.llm is None:
+        elif not self.llms:
             answer.answer = prompts.extractive_answer(result.hits)
             answer.generated_by = "extractive"
         else:
-            parts: list[str] = []
-            try:
-                async for text in self.llm.stream(
-                    prompts.build_system_prompt(req.language),
-                    prompts.build_user_prompt(req.query, jurisdiction, result.hits),
-                ):
-                    parts.append(text)
-                    yield {"type": "delta", "jurisdiction": jurisdiction, "text": text}
-                answer.answer = self._strip_unknown_refs("".join(parts), len(citations))
-                answer.generated_by = self.llm.name
-            except LLMError as exc:
-                log.warning("LLM failed, falling back to extractive answer: %s", exc)
+            # A jurisdiction with one relevant sub-question gets a normal single-part answer.
+            parts = result.parts if result.parts and len(result.parts) > 1 else None
+            system = prompts.build_system_prompt(job.language, multi_part=bool(parts))
+            user = prompts.build_user_prompt(
+                job.query, jurisdiction, result.hits, parts, result.provenance if parts else None
+            )
+            for llm in self.llms:
+                chunks: list[str] = []
+                try:
+                    async for text in llm.stream(system, user):
+                        chunks.append(text)
+                        if job.translate_to is None:  # translated answers are sent whole at the end
+                            yield {"type": "delta", "jurisdiction": jurisdiction, "text": text}
+                    answer.answer = self._strip_unknown_refs("".join(chunks), len(citations))
+                    answer.generated_by = llm.name
+                    break
+                except LLMError as exc:
+                    log.warning("%s failed: %s", llm.name, exc)
+                    if chunks:  # part of this answer was already shown; don't splice in another model
+                        break
+            if not answer.answer:
                 answer.answer = prompts.extractive_answer(result.hits)
                 answer.generated_by = "extractive (fallback)"
 
+        if job.translate_to is not None:
+            try:
+                answer.answer = await self.translator.translate(answer.answer, "en", job.translate_to)
+                answer.generated_by += " + bhashini"
+            except TranslationError as exc:
+                log.warning("Answer translation failed, returning English: %s", exc)
+                answer.generated_by += " (translation failed)"
+
         answers.append(answer)
-        yield {"type": "done", **answer.model_dump(include={"jurisdiction", "answer", "generated_by"})}
+        yield self._done_event(answer)
 
     # ---- helpers ----
+
+    @staticmethod
+    def _done_event(answer: JurisdictionAnswer) -> Event:
+        return {"type": "done", **answer.model_dump(include={"jurisdiction", "answer", "generated_by"})}
 
     @staticmethod
     def _sources_event(answer: JurisdictionAnswer) -> Event:
@@ -241,13 +320,13 @@ class RAGPipeline:
                     return related
         return related
 
-    def _cache_get(self, key: tuple) -> list[JurisdictionAnswer] | None:
+    def _cache_get(self, key: tuple):
         if key in self._cache:
             self._cache.move_to_end(key)
             return self._cache[key]
         return None
 
-    def _cache_put(self, key: tuple, value: list[JurisdictionAnswer]) -> None:
+    def _cache_put(self, key: tuple, value: tuple) -> None:
         if self.settings.answer_cache_size <= 0:
             return
         self._cache[key] = value

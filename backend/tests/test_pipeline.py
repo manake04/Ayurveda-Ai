@@ -76,3 +76,17 @@ async def test_related_sources_come_from_the_graph(make_pipeline):
     cited = {c.id for c in answer.citations}
     for r in answer.related:
         assert r.id not in cited
+
+
+async def test_falls_back_to_second_llm_before_any_text(make_pipeline):
+    primary, backup = FakeLLM(fail=True, name="primary"), FakeLLM(name="backup")
+    resp = await make_pipeline([primary, backup]).answer(AskRequest(query=PATENT_Q))
+    assert resp.answers[0].generated_by == "backup"
+    assert primary.calls == 1 and backup.calls == 1
+
+
+async def test_failure_mid_answer_does_not_splice_models(make_pipeline):
+    primary, backup = FakeLLM(fail_after_first_chunk=True, name="primary"), FakeLLM(name="backup")
+    resp = await make_pipeline([primary, backup]).answer(AskRequest(query=PATENT_Q))
+    assert resp.answers[0].generated_by == "extractive (fallback)"
+    assert backup.calls == 0

@@ -14,3 +14,7 @@ class LLM(Protocol):
     def stream(self, system: str, prompt: str) -> AsyncIterator[str]:
         """Yield the answer as text chunks, as soon as the model produces them."""
         ...
+
+    async def complete_json(self, system: str, prompt: str, schema: dict) -> dict:
+        """Return a JSON object matching `schema` (a plain JSON Schema)."""
+        ...

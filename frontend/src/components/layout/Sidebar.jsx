@@ -1,4 +1,15 @@
-import { FlaskConical, Leaf, Moon, Network, SearchCheck, SquarePen, Sun, MessageSquareText, X } from "lucide-react";
+import {
+  FlaskConical,
+  Leaf,
+  MessageSquareText,
+  Moon,
+  Network,
+  SearchCheck,
+  ShieldCheck,
+  SquarePen,
+  Sun,
+  X,
+} from "lucide-react";
 import { useT } from "../../lib/i18n.js";
 import Logo from "../ui/Logo.jsx";
 import Segmented from "../ui/Segmented.jsx";
@@ -9,6 +20,7 @@ export const VIEWS = [
   { id: "abs", icon: Leaf, key: "navAbs" },
   { id: "prior-art", icon: SearchCheck, key: "navPriorArt" },
   { id: "graph", icon: Network, key: "navGraph" },
+  { id: "sources", icon: ShieldCheck, key: "navSources" },
 ];
 
 export default function Sidebar({ view, onView, onNewChat, lang, onLang, theme, onTheme, health, open, onClose }) {
@@ -88,10 +100,10 @@ export default function Sidebar({ view, onView, onNewChat, lang, onLang, theme, 
 function StatusLine({ health }) {
   const ok = health && !health.error;
   return (
-    <div className="flex items-center gap-2 text-[11px] text-faint" title={ok ? `Embeddings: ${health.embeddings}` : undefined}>
+    <div className="flex items-center gap-2 text-[11px] text-faint" title={ok ? `Models: ${health.llms.join(" → ")} · embeddings: ${health.embeddings}` : undefined}>
       <span className={`h-1.5 w-1.5 rounded-full ${health ? (ok ? "bg-primary" : "bg-danger") : "bg-faint animate-pulse"}`} />
       {!health && "Connecting…"}
-      {ok && `${health.documents} sources · ${health.llm.replace(/^\w+:/, "")}`}
+      {ok && `${health.documents} sources · ${health.llms[0].replace(/^\w+:/, "")}`}
       {health?.error && "Server offline"}
     </div>
   );

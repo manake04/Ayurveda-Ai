@@ -1,7 +1,8 @@
 """Retrieval quality and abstention eval, plus latency.
 
     python -m eval.run_eval              # uses the models configured in .env
-    python -m eval.run_eval --llm        # also generate answers and check their [n] citations
+    python -m eval.run_eval --llm        # also generate answers, check their [n] citations,
+                                         # and run the deep-research (agentic) cases
 
 Exits non-zero if any case fails, so it can gate CI or a model change. It also prints the
 score range of answerable vs. off-topic questions and a suggested abstention threshold,
@@ -26,12 +27,16 @@ EVAL_SET = Path(__file__).resolve().parent / "eval_set.jsonl"
 async def main(with_llm: bool) -> int:
     settings = get_settings()
     if not with_llm:
-        settings = settings.model_copy(update={"llm_provider": "none", "answer_cache_size": 0})
+        settings = settings.model_copy(
+            update={"llm_provider": "none", "llm_fallback_provider": "none", "answer_cache_size": 0}
+        )
     c = await Container.create(settings)
     cases = [json.loads(line) for line in EVAL_SET.read_text(encoding="utf-8").splitlines() if line.strip()]
 
     failures, hit1, hitk, latencies = 0, 0, 0, []
     pos_scores, neg_scores = [], []
+    agentic_cases = [case for case in cases if case.get("mode") == "agentic"]
+    cases = [case for case in cases if case.get("mode") != "agentic"]
     for case in cases:
         jur = case["jurisdiction"]
         t = time.perf_counter()
@@ -61,6 +66,22 @@ async def main(with_llm: bool) -> int:
         failures += not ok
         print(f"[{'PASS' if ok else 'FAIL'}] {case['query'][:60]:60} {detail}")
 
+    agentic_passed = 0
+    if with_llm:
+        for case in agentic_cases:
+            t = time.perf_counter()
+            req = AskRequest(query=case["query"], jurisdiction=case["jurisdiction"], mode="agentic")
+            resp = await c.pipeline.answer(req)
+            cited = {cit.id for a in resp.answers for cit in a.citations}
+            covered = [bool(set(group) & cited) for group in case["expect_each"]]
+            ok = bool(resp.plan) and all(covered)
+            agentic_passed += ok
+            failures += not ok
+            print(
+                f"[{'PASS' if ok else 'FAIL'}] (deep) {case['query'][:52]:52} plan={len(resp.plan or [])} steps, "
+                f"parts covered {sum(covered)}/{len(covered)} in {time.perf_counter() - t:.1f}s"
+            )
+
     n_pos = len(pos_scores)
     print("\n--- Summary ---")
     print(
@@ -79,6 +100,8 @@ async def main(with_llm: bool) -> int:
     else:
         print("Warning: answerable and off-topic score ranges overlap.")
     print(f"Retrieval latency: median {statistics.median(latencies):.0f} ms, max {max(latencies):.0f} ms")
+    if with_llm:
+        print(f"Deep research:     {agentic_passed}/{len(agentic_cases)} multi-part questions fully covered")
     print(f"\n{failures} failure(s)")
     await c.close()
     return failures

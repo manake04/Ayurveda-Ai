@@ -19,6 +19,8 @@ class Embedder(Protocol):
 
     async def embed_query(self, text: str) -> np.ndarray: ...
 
+    async def embed_queries(self, texts: list[str]) -> np.ndarray: ...
+
 
 def _normalise(vectors: np.ndarray) -> np.ndarray:
     vectors = np.asarray(vectors, dtype="float32")
@@ -46,18 +48,43 @@ class _QueryCache:
             self._data.popitem(last=False)
 
 
-class OllamaEmbedder:
+class _QueryEmbedderBase:
+    """Query embedding with an LRU cache; uncached queries are embedded in one batch."""
+
+    def __init__(self):
+        self._cache = _QueryCache()
+
+    async def _embed_query_batch(self, texts: list[str]) -> np.ndarray:
+        raise NotImplementedError
+
+    async def embed_queries(self, texts: list[str]) -> np.ndarray:
+        missing = list(dict.fromkeys(t for t in texts if self._cache.get(t) is None))
+        if missing:
+            for text, vector in zip(missing, await self._embed_query_batch(missing), strict=True):
+                self._cache.put(text, vector)
+        return np.vstack([self._cache.get(t) for t in texts])
+
+    async def embed_query(self, text: str) -> np.ndarray:
+        return (await self.embed_queries([text]))[0]
+
+
+class OllamaEmbedder(_QueryEmbedderBase):
     def __init__(self, settings: Settings, client: httpx.AsyncClient):
+        super().__init__()
         self.name = f"ollama:{settings.embedding_model}"
         self._model = settings.embedding_model
         self._url = settings.ollama_base_url.rstrip("/") + "/api/embed"
         self._query_prefix = settings.embedding_query_prefix
         self._doc_prefix = settings.embedding_document_prefix
+        self._keep_alive = settings.ollama_keep_alive
         self._client = client
-        self._cache = _QueryCache()
 
     async def _embed(self, texts: list[str]) -> np.ndarray:
-        resp = await self._client.post(self._url, json={"model": self._model, "input": texts}, timeout=600)
+        resp = await self._client.post(
+            self._url,
+            json={"model": self._model, "input": texts, "keep_alive": self._keep_alive},
+            timeout=600,
+        )
         if resp.status_code == 404:
             raise RuntimeError(f"Ollama model '{self._model}' not found. Run: ollama pull {self._model}")
         if resp.status_code != 200:
@@ -70,18 +97,15 @@ class OllamaEmbedder:
         out = [await self._embed([self._doc_prefix + t for t in batch]) for batch in batches]
         return np.vstack(out)
 
-    async def embed_query(self, text: str) -> np.ndarray:
-        cached = self._cache.get(text)
-        if cached is None:
-            cached = (await self._embed([self._query_prefix + text]))[0]
-            self._cache.put(text, cached)
-        return cached
+    async def _embed_query_batch(self, texts: list[str]) -> np.ndarray:
+        return await self._embed([self._query_prefix + t for t in texts])
 
 
-class GeminiEmbedder:
+class GeminiEmbedder(_QueryEmbedderBase):
     """Hosted embeddings for deployments where running Ollama isn't practical."""
 
     def __init__(self, settings: Settings, client: httpx.AsyncClient):
+        super().__init__()
         if not settings.gemini_api_key:
             raise RuntimeError("EMBEDDING_PROVIDER=gemini requires GEMINI_API_KEY")
         self.name = f"gemini:{settings.embedding_model}"
@@ -92,7 +116,6 @@ class GeminiEmbedder:
         )
         self._headers = {"x-goog-api-key": settings.gemini_api_key}
         self._client = client
-        self._cache = _QueryCache()
 
     async def _embed(self, texts: list[str], task_type: str) -> np.ndarray:
         requests = [
@@ -113,12 +136,8 @@ class GeminiEmbedder:
         batches = [texts[i : i + 50] for i in range(0, len(texts), 50)]
         return np.vstack([await self._embed(b, "RETRIEVAL_DOCUMENT") for b in batches])
 
-    async def embed_query(self, text: str) -> np.ndarray:
-        cached = self._cache.get(text)
-        if cached is None:
-            cached = (await self._embed([text], "RETRIEVAL_QUERY"))[0]
-            self._cache.put(text, cached)
-        return cached
+    async def _embed_query_batch(self, texts: list[str]) -> np.ndarray:
+        return await self._embed(texts, "RETRIEVAL_QUERY")
 
 
 def create_embedder(settings: Settings, client: httpx.AsyncClient) -> Embedder:

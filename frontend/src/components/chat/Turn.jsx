@@ -3,6 +3,7 @@ import { useT } from "../../lib/i18n.js";
 import ErrorNote from "../ui/ErrorNote.jsx";
 import Logo from "../ui/Logo.jsx";
 import AnswerBlock from "./AnswerBlock.jsx";
+import PlanPanel from "./PlanPanel.jsx";
 
 export default function Turn({ turn, onRetry }) {
   const t = useT();
@@ -18,6 +19,7 @@ export default function Turn({ turn, onRetry }) {
       <div className="flex gap-3 sm:gap-4">
         <Logo className="mt-0.5 hidden h-7 w-7 shrink-0 sm:block" />
         <div className="min-w-0 flex-1 space-y-8">
+          {turn.plan && <PlanPanel plan={turn.plan} />}
           {turn.error ? (
             <ErrorNote
               action={
@@ -32,7 +34,7 @@ export default function Turn({ turn, onRetry }) {
           ) : (
             turn.order.map((j, i) => (
               <div key={j} className={both && i > 0 ? "border-t border-line pt-8" : ""}>
-                <AnswerBlock turnId={turn.id} block={turn.blocks[j]} showLabel />
+                <AnswerBlock turnId={turn.id} block={turn.blocks[j]} query={turn.query} showLabel />
               </div>
             ))
           )}

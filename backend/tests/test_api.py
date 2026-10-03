@@ -5,18 +5,24 @@ import pytest
 
 from app.core.container import Container
 from app.main import create_app
+from app.store import Store
 from tests.conftest import FakeLLM
 
 
 @pytest.fixture
 async def client(settings, docs, graph, retriever, make_pipeline):
     llm = FakeLLM()
-    container = Container(settings, httpx.AsyncClient(), docs, graph, retriever, llm, make_pipeline(llm))
+    container = Container(
+        settings, httpx.AsyncClient(), docs, graph, retriever, [llm], make_pipeline(llm), Store(":memory:")
+    )
     app = create_app(settings, container)
     async with app.router.lifespan_context(app):
         transport = httpx.ASGITransport(app=app)
         async with httpx.AsyncClient(transport=transport, base_url="http://test") as c:
             yield c
+
+
+SESSION = {"X-Session-Id": "test-session-1234"}
 
 
 async def test_health(client):
@@ -64,3 +70,46 @@ async def test_tools(client):
     assert (await client.post("/api/abs-checklist", json=abs_body)).json()["checklist"][0]["applies"] is True
     tkdl = (await client.get("/api/tkdl-pointer", params={"query": "turmeric"})).json()
     assert len(tkdl["search_links"]) == 4
+
+
+async def test_config_exposes_languages_and_escalation(client):
+    body = (await client.get("/api/config")).json()
+    assert [lang["code"] for lang in body["languages"]] == ["auto", "en", "hi"]  # no Bhashini configured
+    assert body["escalation"]["url"].startswith("https://")
+    assert body["agentic"] is True
+
+
+async def test_questions_are_audited_without_their_text(client):
+    q = "section 3(p) traditional knowledge patent"
+    await client.post("/api/ask/stream", json={"query": q}, headers=SESSION)
+    items = (await client.get("/api/privacy/activity", headers=SESSION)).json()["items"]
+    assert items[0]["type"] == "question"
+    assert "query" not in items[0]["detail"] and items[0]["detail"]["query_chars"] == len(q)
+    assert items[0]["detail"]["generated_by"]["india"] == "fake:llm"
+
+
+async def test_consent_escalation_and_erasure(client):
+    connectors = (await client.get("/api/connectors", headers=SESSION)).json()
+    assert all(not c["connected"] and not c["consent"] for c in connectors)
+    r = await client.post("/api/consents", json={"connector": "manupatra", "granted": True}, headers=SESSION)
+    assert r.json()["granted"] is True
+    assert (
+        await client.post("/api/consents", json={"connector": "nope", "granted": True})
+    ).status_code == 404
+
+    body = {"question": "Can I patent this?", "jurisdiction": "india", "consent": False}
+    assert (await client.post("/api/escalations", json=body, headers=SESSION)).status_code == 400
+    ticket = (await client.post("/api/escalations", json={**body, "consent": True}, headers=SESSION)).json()
+    assert ticket["id"].startswith("ESC-")
+
+    types = {i["type"] for i in (await client.get("/api/privacy/activity", headers=SESSION)).json()["items"]}
+    assert {"consent", "escalation"} <= types
+    assert (await client.delete("/api/privacy/activity", headers=SESSION)).json()["deleted"] >= 2
+    assert (await client.get("/api/privacy/activity", headers=SESSION)).json()["items"] == []
+
+
+async def test_sessions_are_isolated_and_anonymous_cannot_erase(client):
+    await client.post("/api/consents", json={"connector": "scc-online", "granted": True}, headers=SESSION)
+    other = {"X-Session-Id": "another-session-99"}
+    assert (await client.get("/api/privacy/activity", headers=other)).json()["items"] == []
+    assert (await client.delete("/api/privacy/activity")).status_code == 400

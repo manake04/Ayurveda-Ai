@@ -17,7 +17,7 @@ export function useChat() {
   const updateBlock = (id, jurisdiction, fn) =>
     update(id, (t) => ({ ...t, blocks: { ...t.blocks, [jurisdiction]: fn(t.blocks[jurisdiction]) } }));
 
-  const send = useCallback(async ({ query, jurisdiction, language }) => {
+  const send = useCallback(async ({ query, jurisdiction, language, mode = "standard" }) => {
     const id = nextId++;
     const order = jurisdiction === "both" ? ["india", "international"] : [jurisdiction];
     setTurns((prev) => [
@@ -27,6 +27,8 @@ export function useChat() {
         query,
         jurisdiction,
         language,
+        mode,
+        plan: null, // deep research: [{question, done, found}]
         order,
         blocks: Object.fromEntries(order.map((j) => [j, emptyBlock(j)])),
         error: null,
@@ -39,10 +41,18 @@ export function useChat() {
 
     try {
       await streamAnswer(
-        { query, jurisdiction, language },
+        { query, jurisdiction, language, mode },
         (event) => {
-          if (event.type === "sources") {
-            const { type, ...rest } = event;
+          if (event.type === "plan") {
+            update(id, (t) => ({ ...t, plan: event.steps.map((s) => ({ ...s, done: false })) }));
+          } else if (event.type === "step") {
+            update(id, (t) => ({
+              ...t,
+              plan: t.plan?.map((s, i) => (i === event.index ? { ...s, done: true, found: event.found } : s)),
+            }));
+          } else if (event.type === "sources") {
+            const { type: _type, ...rest } = event;
+            update(id, (t) => ({ ...t, plan: t.plan?.map((s) => ({ ...s, done: true })) ?? null }));
             updateBlock(id, event.jurisdiction, (b) => ({ ...b, ...rest, status: "writing" }));
           } else if (event.type === "delta") {
             updateBlock(id, event.jurisdiction, (b) => ({ ...b, answer: b.answer + event.text }));

@@ -5,14 +5,16 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 JurisdictionChoice = Literal["india", "international", "both"]
-Language = Literal["auto", "en", "hi"]
 Confidence = Literal["high", "medium", "low"]
 
 
 class AskRequest(BaseModel):
     query: str = Field(..., min_length=3, max_length=2000)
     jurisdiction: JurisdictionChoice = "india"
-    language: Language = "auto"
+    # "auto" (reply in the question's language), "en", "hi", or a Bhashini language code.
+    language: str = Field("auto", pattern=r"^(auto|[a-z]{2,3})$")
+    # "agentic" plans sub-questions first ("deep research"); "standard" is one retrieval.
+    mode: Literal["standard", "agentic"] = "standard"
 
 
 class Citation(BaseModel):
@@ -56,6 +58,7 @@ class JurisdictionAnswer(BaseModel):
 
 class AskResponse(BaseModel):
     query: str
+    plan: list[str] | None = None  # agentic mode: the sub-questions researched
     answers: list[JurisdictionAnswer]
     disclaimer: str
     latency_ms: int
