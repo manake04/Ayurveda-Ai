@@ -7,7 +7,7 @@ from pathlib import Path
 # Corpus files that hold graph metadata rather than citable documents.
 _NON_DOCUMENT_FILES = {"graph_edges.json"}
 
-Document = dict  # one corpus entry; see corpus/SCHEMA.md
+Document = dict  # one corpus entry; see corpus/README.md
 
 
 def load_corpus(corpus_dir: Path) -> list[Document]:

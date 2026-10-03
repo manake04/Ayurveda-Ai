@@ -38,12 +38,10 @@
 7. **Cite-check.** The model sees only the retrieved documents, numbered `[1]..[n]`, and is
    told to cite every factual sentence. Any `[n]` outside that range is removed before the
    final `done` event, so the UI cannot show a citation to something that wasn't retrieved.
-8. **Fallback.** Gemini first retries brief failures (429/5xx such as 503 "model is
-   experiencing high demand") after 1 s and 3 s. Then models are tried in order
-   (`LLM_PROVIDER`, then `LLM_FALLBACK_PROVIDER`). If
-   one fails before writing anything, the next one answers. If one fails part-way through, the
-   answer switches to quoting the source summaries (`extractive (fallback)`) rather than
-   splicing two models' text together. Fallback answers are not cached.
+8. **Fallback.** Gemini retries brief failures (429/5xx, e.g. 503 "high demand") after 1 s and
+   3 s. Models are then tried in order (`LLM_PROVIDER`, `LLM_FALLBACK_PROVIDER`): if one fails
+   before writing anything, the next answers; if one fails mid-answer, the answer switches to
+   quoting the source summaries rather than splicing two models' text. Fallbacks aren't cached.
 9. **Cache.** Successful answers are cached in memory by normalised question, jurisdiction and
    language, so a repeated question returns instantly with no LLM cost.
 
@@ -75,8 +73,7 @@ event: end      data: {"latency_ms":1840}
    `AGENTIC_MAX_SOURCES`.
 4. **Answer.** The normal generator writes each jurisdiction's answer, listing only the
    sub-questions tagged with that jurisdiction and marking each source with the part(s) it
-   serves. Citation checking, abstention, graph
-   expansion and caching all work unchanged.
+   serves. Citation checking, abstention, graph expansion and caching work unchanged.
 
 ## Privacy, audit and consent (DPDP)
 
@@ -113,40 +110,30 @@ on it.
 
 ## Models and benchmarks
 
-Measured on this corpus with `python -m eval.run_eval` (28 answerable questions including 4 in
-Hindi, 7 off-topic), on a 16-core CPU with no GPU:
+Measured with `make eval` (28 answerable questions, 4 in Hindi; 7 off-topic) on a 16-core CPU
+without a GPU:
 
-| Embeddings | Reranker | Top-1 | Top-5 | Off-topic declined | Separation* | Retrieval latency |
+| Embeddings | Reranker | Top-1 | Top-5 | Off-topic declined | Separation* | Latency / query |
 |---|---|---|---|---|---|---|
+| **qwen3-embedding:8b-q8_0** (default) | none | 26/28 | 28/28 | 7/7 | 0.64 vs 0.59 | ~2.5 s |
 | embeddinggemma | none | 25/28 | 28/28 | 7/7 | 0.48 vs 0.16 | ~150 ms |
 | embeddinggemma | MiniLM-L6 cross-encoder | 22/28 | 26/28 | 7/7 | overlapping | +850 ms |
 | embeddinggemma | jina multilingual v2 | 27/28 | 28/28 | 7/7 | clean | +6.5 s |
-| **qwen3-embedding:8b-q8_0** (default) | none | 26/28 | 28/28 | 1/7 at default threshold | 0.64 vs 0.59 | ~3.5 s (11 s max) |
-| qwen3-embedding:0.6b | none | 27/28 | 28/28 | 2/7 at default threshold | 0.54 vs 0.51 | ~240 ms |
+| qwen3-embedding:0.6b | none | 27/28 | 28/28 | 2/7 | 0.54 vs 0.51 | ~240 ms |
 | nomic-embed-text | none | 16/28 | 25/28 | — | overlapping | ~110 ms |
 
-\* Lowest score of an answerable question vs. highest score of an off-topic one. A wide gap
-is what makes abstention reliable.
+\* Lowest score of an answerable question vs. highest score of an off-topic one. The wider
+the gap, the more reliable abstention is. Thresholds are per model: run `make eval` after
+switching and copy the suggested value into `CONFIDENCE_ABSTAIN`.
 
-Current default: **Qwen3-Embedding-8B**, chosen for its top-1 accuracy. Its costs on CPU are
-the ~3.5 s per query and the narrow off-topic margin, which makes abstention more fragile than
-with embeddinggemma. On a GPU the latency cost largely disappears.
-
-- **embeddinggemma** is multilingual, small (300M parameters) and fast on CPU, and separates
-  answerable from off-topic questions by a wide margin. It's the recommended switch if speed
-  matters more than the last point of accuracy.
-- **The MiniLM cross-encoder makes results worse** here: it is English-only, so every Hindi
-  question fails, and it adds ~0.85 s per query on CPU. The jina multilingual reranker is
-  slightly better than no reranker but far too slow on CPU. The reranker stays pluggable for
-  a GPU deployment or a larger corpus.
-- **Qwen3-Embedding-8B** ranks one more question correctly, but on CPU it takes ~3.5 s per
-  query (23x slower) and leaves only a thin margin between answerable and off-topic
-  questions, which makes abstention fragile. Worth revisiting on a GPU. Note that the
-  `dengcao/Qwen3-Embedding-8B` Ollama build is packaged as completion-only and rejects
-  embedding requests; use the official `qwen3-embedding:8b-q8_0` tag.
-
-To try another model, set `EMBEDDING_MODEL` and its prefixes in `backend/.env`, run
-`make eval`, and copy the suggested threshold into `CONFIDENCE_ABSTAIN`.
+- **Qwen3-Embedding-8B** (default) has the best top-1 accuracy but a thin abstention margin
+  and is slow on CPU; on a GPU the latency largely disappears. Use the official
+  `qwen3-embedding:8b-q8_0` tag: the `dengcao/Qwen3-Embedding-8B` build is packaged
+  completion-only and can't embed.
+- **embeddinggemma** is the best choice on CPU: fast, multilingual, and the widest margin.
+- **Rerankers** don't pay off here. The MiniLM cross-encoder is English-only (every Hindi
+  question fails) and the multilingual jina model is too slow on CPU. The stage stays
+  pluggable (`RERANKER_MODEL`) for a GPU deployment or a larger corpus.
 
 ## Running models locally
 
@@ -182,13 +169,6 @@ wording with the question.
   sharing duties that likely apply, each with its corpus sources.
 - **Prior-art pointer** (`domain/tkdl.py`): TKDL is only open to patent examiners, so this
   explains that and links to public patent databases. It does not pretend to search TKDL.
-
-## Configuration
-
-All settings live in `core/config.py` and are read from `backend/.env`; see
-`backend/.env.example`. The important ones: `LLM_PROVIDER`, `GEMINI_API_KEY`, `GEMINI_MODEL`,
-`EMBEDDING_PROVIDER`, `EMBEDDING_MODEL`, `CONFIDENCE_HIGH`, `CONFIDENCE_ABSTAIN`,
-`RERANKER_MODEL`, `CORS_ORIGINS`.
 
 ## Scaling notes
 
